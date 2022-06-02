@@ -1,0 +1,418 @@
+openapi: 3.0.1
+info:
+  title: Swagger Petstore - OpenAPI 3.0
+  description: Forked and modified by International Network Support & Service - Glas
+  contact:
+    email: openapi@inss.ch
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.1.0
+servers:
+- url: //localhost:8080/api/v3
+tags:
+- name: book-controller
+  description: the book API
+- name: customer-controller
+  description: the customer API
+paths:
+  /books:
+    get:
+      tags:
+      - book-controller
+      summary: getAll
+      operationId: getAllUsingGET
+      responses:
+        200:
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/ResourcesBookResource'
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+  /books/{customerId}:
+    get:
+      tags:
+      - book-controller
+      summary: getAllByCustomerId
+      operationId: getAllByCustomerIdUsingGET
+      parameters:
+      - name: customerId
+        in: path
+        description: customerId
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/ResourcesBookResource'
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+  /customers:
+    get:
+      tags:
+      - customer-controller
+      summary: getAll
+      operationId: getAllUsingGET_1
+      responses:
+        200:
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/ResourcesCustomerResource'
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+    put:
+      tags:
+      - customer-controller
+      summary: update
+      operationId: updateUsingPUT
+      requestBody:
+        description: updCustomerResource
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/ResourceCustomerResource'
+        201:
+          description: Created
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+      x-codegen-request-body-name: updCustomerResource
+    post:
+      tags:
+      - customer-controller
+      summary: insert
+      operationId: insertUsingPOST
+      requestBody:
+        description: newCustomerResource
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/ResourceCustomerResource'
+        201:
+          description: Created
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+      x-codegen-request-body-name: newCustomerResource
+  /customers/{id}:
+    get:
+      tags:
+      - customer-controller
+      summary: get
+      operationId: getUsingGET
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/ResourceCustomerResource'
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+    delete:
+      tags:
+      - customer-controller
+      summary: delete
+      operationId: deleteUsingDELETE
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Resourceobject'
+        204:
+          description: No Content
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+  /customers/{id}/v2:
+    get:
+      tags:
+      - customer-controller
+      summary: getWithoutGeneralLinks
+      operationId: getWithoutGeneralLinksUsingGET
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/CustomerResource'
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+components:
+  schemas:
+    Book:
+      title: Book
+      type: object
+      properties:
+        author:
+          type: string
+        errorMsg:
+          type: string
+        id:
+          type: integer
+          format: int64
+        language:
+          type: string
+        title:
+          type: string
+    BookResource:
+      title: BookResource
+      type: object
+      properties:
+        _links:
+          type: array
+          xml:
+            name: link
+            attribute: false
+            wrapped: false
+          items:
+            $ref: '#/components/schemas/Link'
+        book:
+          $ref: '#/components/schemas/Book'
+    Customer:
+      title: Customer
+      type: object
+      properties:
+        company:
+          type: string
+        errorMsg:
+          type: string
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    CustomerResource:
+      title: CustomerResource
+      type: object
+      properties:
+        _links:
+          type: array
+          xml:
+            name: link
+            attribute: false
+            wrapped: false
+          items:
+            $ref: '#/components/schemas/Link'
+        customer:
+          $ref: '#/components/schemas/Customer'
+    Link:
+      title: Link
+      type: object
+      properties:
+        deprecation:
+          type: string
+          xml:
+            name: deprecation
+            attribute: true
+            wrapped: false
+        href:
+          type: string
+          xml:
+            name: href
+            attribute: true
+            wrapped: false
+        hreflang:
+          type: string
+          xml:
+            name: hreflang
+            attribute: true
+            wrapped: false
+        media:
+          type: string
+          xml:
+            name: media
+            attribute: true
+            wrapped: false
+        rel:
+          type: string
+          xml:
+            name: rel
+            attribute: true
+            wrapped: false
+        templated:
+          type: boolean
+        title:
+          type: string
+          xml:
+            name: title
+            attribute: true
+            wrapped: false
+        type:
+          type: string
+          xml:
+            name: type
+            attribute: true
+            wrapped: false
+    ResourcesBookResource:
+      title: Resources«BookResource»
+      type: object
+      properties:
+        _embedded:
+          type: array
+          xml:
+            name: embedded
+            attribute: false
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/BookResource'
+        _links:
+          type: array
+          xml:
+            name: link
+            attribute: false
+            wrapped: false
+          items:
+            $ref: '#/components/schemas/Link'
+    ResourcesCustomerResource:
+      title: Resources«CustomerResource»
+      type: object
+      properties:
+        _embedded:
+          type: array
+          xml:
+            name: embedded
+            attribute: false
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/CustomerResource'
+        _links:
+          type: array
+          xml:
+            name: link
+            attribute: false
+            wrapped: false
+          items:
+            $ref: '#/components/schemas/Link'
+    ResourceCustomerResource:
+      title: Resource«CustomerResource»
+      type: object
+      properties:
+        _links:
+          type: array
+          xml:
+            name: link
+            attribute: false
+            wrapped: false
+          items:
+            $ref: '#/components/schemas/Link'
+        customer:
+          $ref: '#/components/schemas/Customer'
+    Resourceobject:
+      title: Resource«object»
+      type: object
+      properties:
+        _links:
+          type: array
+          xml:
+            name: link
+            attribute: false
+            wrapped: false
+          items:
+            $ref: '#/components/schemas/Link'
+

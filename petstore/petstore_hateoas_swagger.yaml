@@ -1,0 +1,389 @@
+swagger: '2.0'
+info:
+  description: Forked and modified by International Network Support & Service - Glas
+  version: 1.1.0
+  title: Swagger Petstore - SWagger
+  contact:
+    email: openapi@inss.ch
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+host: localhost:8080
+basePath: /api/v3
+tags:
+  - name: book-controller
+    description: the book API
+  - name: customer-controller
+    description: the customer API
+paths:
+  /books:
+    get:
+      tags:
+        - book-controller
+      summary: getAll
+      operationId: getAllUsingGET
+      produces:
+        - application/hal+json
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ResourcesBookResource'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /books/{customerId}:
+    get:
+      tags:
+        - book-controller
+      summary: getAllByCustomerId
+      operationId: getAllByCustomerIdUsingGET
+      produces:
+        - application/hal+json
+      parameters:
+        - name: customerId
+          in: path
+          description: customerId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ResourcesBookResource'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /customers:
+    get:
+      tags:
+        - customer-controller
+      summary: getAll
+      operationId: getAllUsingGET_1
+      produces:
+        - application/hal+json
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ResourcesCustomerResource'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    post:
+      tags:
+        - customer-controller
+      summary: insert
+      operationId: insertUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/hal+json
+      parameters:
+        - in: body
+          name: newCustomerResource
+          description: newCustomerResource
+          required: true
+          schema:
+            $ref: '#/definitions/Customer'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ResourceCustomerResource'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    put:
+      tags:
+        - customer-controller
+      summary: update
+      operationId: updateUsingPUT
+      consumes:
+        - application/json
+      produces:
+        - application/hal+json
+      parameters:
+        - in: body
+          name: updCustomerResource
+          description: updCustomerResource
+          required: true
+          schema:
+            $ref: '#/definitions/Customer'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ResourceCustomerResource'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /customers/{id}:
+    get:
+      tags:
+        - customer-controller
+      summary: get
+      operationId: getUsingGET
+      produces:
+        - application/hal+json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ResourceCustomerResource'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - customer-controller
+      summary: delete
+      operationId: deleteUsingDELETE
+      produces:
+        - application/hal+json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Resourceobject'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /customers/{id}/v2:
+    get:
+      tags:
+        - customer-controller
+      summary: getWithoutGeneralLinks
+      operationId: getWithoutGeneralLinksUsingGET
+      produces:
+        - application/hal+json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/CustomerResource'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+definitions:
+  Book:
+    type: object
+    properties:
+      author:
+        type: string
+      errorMsg:
+        type: string
+      id:
+        type: integer
+        format: int64
+      language:
+        type: string
+      title:
+        type: string
+    title: Book
+  BookResource:
+    type: object
+    properties:
+      _links:
+        type: array
+        xml:
+          name: link
+          attribute: false
+          wrapped: false
+        items:
+          $ref: '#/definitions/Link'
+      book:
+        $ref: '#/definitions/Book'
+    title: BookResource
+  Customer:
+    type: object
+    properties:
+      company:
+        type: string
+      errorMsg:
+        type: string
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+    title: Customer
+  CustomerResource:
+    type: object
+    properties:
+      _links:
+        type: array
+        xml:
+          name: link
+          attribute: false
+          wrapped: false
+        items:
+          $ref: '#/definitions/Link'
+      customer:
+        $ref: '#/definitions/Customer'
+    title: CustomerResource
+  Link:
+    type: object
+    properties:
+      deprecation:
+        type: string
+        xml:
+          name: deprecation
+          attribute: true
+          wrapped: false
+      href:
+        type: string
+        xml:
+          name: href
+          attribute: true
+          wrapped: false
+      hreflang:
+        type: string
+        xml:
+          name: hreflang
+          attribute: true
+          wrapped: false
+      media:
+        type: string
+        xml:
+          name: media
+          attribute: true
+          wrapped: false
+      rel:
+        type: string
+        xml:
+          name: rel
+          attribute: true
+          wrapped: false
+      templated:
+        type: boolean
+      title:
+        type: string
+        xml:
+          name: title
+          attribute: true
+          wrapped: false
+      type:
+        type: string
+        xml:
+          name: type
+          attribute: true
+          wrapped: false
+    title: Link
+  ResourcesBookResource:
+    type: object
+    properties:
+      _embedded:
+        type: array
+        xml:
+          name: embedded
+          attribute: false
+          wrapped: true
+        items:
+          $ref: '#/definitions/BookResource'
+      _links:
+        type: array
+        xml:
+          name: link
+          attribute: false
+          wrapped: false
+        items:
+          $ref: '#/definitions/Link'
+    title: Resources«BookResource»
+  ResourcesCustomerResource:
+    type: object
+    properties:
+      _embedded:
+        type: array
+        xml:
+          name: embedded
+          attribute: false
+          wrapped: true
+        items:
+          $ref: '#/definitions/CustomerResource'
+      _links:
+        type: array
+        xml:
+          name: link
+          attribute: false
+          wrapped: false
+        items:
+          $ref: '#/definitions/Link'
+    title: Resources«CustomerResource»
+  ResourceCustomerResource:
+    type: object
+    properties:
+      _links:
+        type: array
+        xml:
+          name: link
+          attribute: false
+          wrapped: false
+        items:
+          $ref: '#/definitions/Link'
+      customer:
+        $ref: '#/definitions/Customer'
+    title: Resource«CustomerResource»
+  Resourceobject:
+    type: object
+    properties:
+      _links:
+        type: array
+        xml:
+          name: link
+          attribute: false
+          wrapped: false
+        items:
+          $ref: '#/definitions/Link'
+    title: Resource«object»
+

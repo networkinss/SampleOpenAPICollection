@@ -1,0 +1,29 @@
+openapi: 3.0.1
+info:
+  title: Hello World API
+  version: "1.0"
+servers:
+- url: http://localhost:8080
+paths:
+  /hello/{user}:
+    get:
+      description: Returns a greeting to the user!
+      parameters:
+      - description: The name of the user to greet.
+        in: path
+        name: user
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: Returns the greeting.
+        "400":
+          content: {}
+          description: Invalid characters in "user" were provided.
+components:
+  schemas: {}

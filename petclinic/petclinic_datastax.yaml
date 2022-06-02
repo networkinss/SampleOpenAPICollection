@@ -1,0 +1,1194 @@
+openapi: 3.0.1
+info:
+  title: Spring Pet Clinic Application Reactive
+  description: Leveraging Reactive Datastax driver and DataStax Astra Cassandra-as-a-service
+  termsOfService: http://inss.ch/TermsofService
+  contact:
+    name: DataStax Examples
+    url: https://www.datastax.com/examples
+    email: examples@datastax.com
+  license:
+    name: Apache v2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  version: 1.0.0-SNAPSHOT
+servers:
+  - url: http://localhost:9966/
+tags:
+  - name: Owners Api
+    description: Owner Reactive Controller
+  - name: Pet Types Api
+    description: Pet Type Reactive Controller
+  - name: Pets Api
+    description: Pet Reactive Controller
+  - name: Veterinarian Specialties Api
+    description: Vet Specialty Controller
+  - name: Veterinarians Api
+    description: Vet Reactive Controller
+  - name: Visit Api
+    description: Visit Reactive Controller
+paths:
+  /petclinic/api/owners:
+    get:
+      tags:
+        - Owners Api
+      summary: Read all owners in database
+      operationId: findAllOwnersUsingGET
+      responses:
+        200:
+          description: List of owners (even if empty)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+    post:
+      tags:
+        - Owners Api
+      summary: Create a new owner, an unique identifier is generated and returned
+      operationId: createOwnerUsingPOST
+      requestBody:
+        description: owner
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Owner'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+        201:
+          description: The owner has been created, uuid is provided in header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+        400:
+          description: The JSON body was not a valid JSON or does not match Owner
+            structure
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+      x-codegen-request-body-name: owner
+  /petclinic/api/owners/lastname/{lastName}:
+    get:
+      tags:
+        - Owners Api
+      summary: Search owner by their lastName
+      operationId: searchOwnersByNameUsingGET
+      parameters:
+        - name: lastName
+          in: path
+          description: lastName
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: List of owners matching the lastname
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+  /petclinic/api/owners/{ownerId}:
+    get:
+      tags:
+        - Owners Api
+      summary: Retrieve owner information by its unique identifier
+      operationId: findOwnerUsingGET
+      parameters:
+        - name: ownerId
+          in: path
+          description: Unique identifier of an Owner
+          required: true
+          schema:
+            type: string
+          example: 1ff2fbd9-bbb0-4cc1-ba37-61966aa7c5e6
+      responses:
+        200:
+          description: the identifier exists and related owner is returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+        400:
+          description: The identifier was not a valid UUID
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: the identifier does not exist in DB
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+    put:
+      tags:
+        - Owners Api
+      summary: Upsert a owner (no read before write as for Cassandra)
+      operationId: upsertOwnerUsingPUT
+      parameters:
+        - name: ownerId
+          in: path
+          description: ownerId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: owner
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Owner'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+        201:
+          description: The owner has been created, uuid is provided in header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+        400:
+          description: The JSON body was malformed or does not match Owner structure
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+      x-codegen-request-body-name: owner
+    delete:
+      tags:
+        - Owners Api
+      summary: Delete a owner by its unique identifier
+      operationId: deleteByIdUsingDELETE
+      parameters:
+        - name: ownerId
+          in: path
+          description: Unique identifier of a owner
+          required: true
+          schema:
+            type: string
+          example: 1ff2fbd9-bbb0-4cc1-ba37-61966aa7c5e6
+      responses:
+        200:
+          description: OK
+          content: { }
+        204:
+          description: The owner has been deleted
+          content: { }
+        400:
+          description: The identifier was not a valid UUID
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+  /petclinic/api/pets:
+    get:
+      tags:
+        - Pets Api
+      summary: Read all pets in database
+      operationId: findAllPetsUsingGET
+      responses:
+        200:
+          description: List of pets (even if empty)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+    post:
+      tags:
+        - Pets Api
+      summary: Create a new Pet, an unique identifier is generated and returned
+      operationId: createPetUsingPOST
+      requestBody:
+        description: pet
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        201:
+          description: The pet has been created, uuid is provided in header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        400:
+          description: Invalid Dto provided
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+      x-codegen-request-body-name: pet
+  /petclinic/api/pets/{petId}:
+    get:
+      tags:
+        - Pets Api
+      summary: Retrieve pet information by its unique identifier
+      operationId: findPetByIdUsingGET
+      parameters:
+        - name: petId
+          in: path
+          description: Unique identifier of a Pet
+          required: true
+          schema:
+            type: string
+          example: 1ff2fbd9-bbb0-4cc1-ba37-61966aa7c5e6
+      responses:
+        200:
+          description: the identifier exists and related pet is returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        400:
+          description: The uid was not a valid UUID
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: the identifier does not exist in DB
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+    put:
+      tags:
+        - Pets Api
+      summary: Upsert a pet (no read before write as for Cassandra)
+      operationId: upsertPetUsingPUT
+      parameters:
+        - name: petId
+          in: path
+          description: petId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: pet
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        201:
+          description: The pet has been created, uuid is provided in header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        400:
+          description: The pet bean was malformed or does not provide valid id
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+      x-codegen-request-body-name: pet
+    delete:
+      tags:
+        - Pets Api
+      summary: Delete a pet by its unique identifier
+      operationId: deleteByIdUsingDELETE_1
+      parameters:
+        - name: petId
+          in: path
+          description: Unique identifier of a pet
+          required: true
+          schema:
+            type: string
+          example: 1ff2fbd9-bbb0-4cc1-ba37-61966aa7c5e6
+      responses:
+        200:
+          description: OK
+          content: { }
+        204:
+          description: The pet has been deleted
+          content: { }
+        400:
+          description: The uid was not a valid UUID
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+  /petclinic/api/pettypes:
+    get:
+      tags:
+        - Pet Types Api
+      summary: Read all pet types from database
+      operationId: getAllPetTypesUsingGET
+      responses:
+        200:
+          description: List of pet types
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetType'
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+    post:
+      tags:
+        - Pet Types Api
+      summary: addType
+      operationId: addTypeUsingPOST
+      requestBody:
+        description: petType
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetType'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetType'
+        201:
+          description: Created
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+      x-codegen-request-body-name: petType
+  /petclinic/api/pettypes/{petTypeId}:
+    get:
+      tags:
+        - Pet Types Api
+      summary: Retrieve pet information information by its unique identifier
+      operationId: getTypeUsingGET
+      parameters:
+        - name: petTypeId
+          in: path
+          description: Unique identifier of a Pet Type
+          required: true
+          schema:
+            type: string
+          example: surgery
+      responses:
+        200:
+          description: the identifier exists and related pet type is returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetType'
+        400:
+          description: The name was not valid
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+    put:
+      tags:
+        - Pet Types Api
+      summary: updatePetType
+      operationId: updatePetTypeUsingPUT
+      parameters:
+        - name: petTypeId
+          in: path
+          description: petTypeId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: petType
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetType'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetType'
+        201:
+          description: Created
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+      x-codegen-request-body-name: petType
+    delete:
+      tags:
+        - Pet Types Api
+      summary: deletePetType
+      operationId: deletePetTypeUsingDELETE
+      parameters:
+        - name: petTypeId
+          in: path
+          description: petTypeId
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content: { }
+        204:
+          description: No Content
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+  /petclinic/api/specialties:
+    get:
+      tags:
+        - Veterinarian Specialties Api
+      summary: Read all veterinarians specialties from database
+      operationId: getAllVetsSpecialtiesUsingGET
+      responses:
+        200:
+          description: List of veterinarians specialties
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VetSpecialty'
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+    post:
+      tags:
+        - Veterinarian Specialties Api
+      summary: addSpecialty
+      operationId: addSpecialtyUsingPOST
+      requestBody:
+        description: specialty
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VetSpecialty'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VetSpecialty'
+        201:
+          description: Created
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+      x-codegen-request-body-name: specialty
+  /petclinic/api/specialties/{specialtyId}:
+    get:
+      tags:
+        - Veterinarian Specialties Api
+      summary: Retrieve veterinarian information by its unique identifier
+      operationId: getSpecialtyUsingGET
+      parameters:
+        - name: specialtyId
+          in: path
+          description: Unique identifier of a Veterinarian specialty
+          required: true
+          schema:
+            type: string
+          example: surgery
+      responses:
+        200:
+          description: the identifier exists and related veterinarian specialty is
+            returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VetSpecialty'
+        400:
+          description: The name was not valid
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+    put:
+      tags:
+        - Veterinarian Specialties Api
+      summary: updateSpecialty
+      operationId: updateSpecialtyUsingPUT
+      parameters:
+        - name: specialtyId
+          in: path
+          description: specialtyId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: specialty
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VetSpecialty'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VetSpecialty'
+        201:
+          description: Created
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+      x-codegen-request-body-name: specialty
+    delete:
+      tags:
+        - Veterinarian Specialties Api
+      summary: deleteSpecialty
+      operationId: deleteSpecialtyUsingDELETE
+      parameters:
+        - name: specialtyId
+          in: path
+          description: specialtyId
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content: { }
+        204:
+          description: No Content
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+  /petclinic/api/vets:
+    get:
+      tags:
+        - Veterinarians Api
+      summary: Read all veterinarians in database
+      operationId: getAllVetsUsingGET
+      responses:
+        200:
+          description: List of veterinarians
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vet'
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+    post:
+      tags:
+        - Veterinarians Api
+      summary: Create a new veterinarian, an unique identifier is generated and returned
+      operationId: createVetUsingPOST
+      requestBody:
+        description: vet
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Vet'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vet'
+        201:
+          description: The veterinarian has been created, uuid is provided in header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vet'
+        400:
+          description: The uid was not a valid UUID
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+      x-codegen-request-body-name: vet
+  /petclinic/api/vets/{vetId}:
+    get:
+      tags:
+        - Veterinarians Api
+      summary: Retrieve veterinarian information by its unique identifier
+      operationId: getVetUsingGET
+      parameters:
+        - name: vetId
+          in: path
+          description: Unique identifier of a Veterinarian
+          required: true
+          schema:
+            type: string
+          example: 1ff2fbd9-bbb0-4cc1-ba37-61966aa7c5e6
+      responses:
+        200:
+          description: the identifier exists and related veterinarian is returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vet'
+        400:
+          description: The uid was not a valid UUID
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+    put:
+      tags:
+        - Veterinarians Api
+      summary: Upsert a veterinarian (no read before write as for Cassandra)
+      operationId: upsertUsingPUT
+      parameters:
+        - name: vetId
+          in: path
+          description: vetId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: vet
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Vet'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vet'
+        201:
+          description: The veterinarian has been created, uuid is provided in header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vet'
+        400:
+          description: The vet bean was malformed or does not provide valid id
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+      x-codegen-request-body-name: vet
+    delete:
+      tags:
+        - Veterinarians Api
+      summary: Delete a veterinarian by its unique identifier
+      operationId: deleteByIdUsingDELETE_2
+      parameters:
+        - name: vetId
+          in: path
+          description: Unique identifier of a Veterinarian
+          required: true
+          schema:
+            type: string
+          example: 1ff2fbd9-bbb0-4cc1-ba37-61966aa7c5e6
+      responses:
+        200:
+          description: OK
+          content: { }
+        204:
+          description: The veterinarian has been deleted
+          content: { }
+        400:
+          description: The uid was not a valid UUID
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+  /petclinic/api/visits:
+    get:
+      tags:
+        - Visit Api
+      summary: Read all visits in database
+      operationId: findAllVisitsUsingGET
+      responses:
+        200:
+          description: List of visits (even if empty)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+    post:
+      tags:
+        - Visit Api
+      summary: Create a new visit, an unique identifier is generated and returned
+      operationId: createVisitUsingPOST
+      requestBody:
+        description: visit
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Visit'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+        201:
+          description: The visit has been created, uuid is provided in header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+        400:
+          description: The visit was malformed
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+      x-codegen-request-body-name: visit
+  /petclinic/api/visits/{visitId}:
+    get:
+      tags:
+        - Visit Api
+      summary: Retrieve visit information by its unique identifier
+      operationId: findVisitByIdUsingGET
+      parameters:
+        - name: visitId
+          in: path
+          description: Unique identifier of a visit
+          required: true
+          schema:
+            type: string
+          example: 1ff2fbd9-bbb0-4cc1-ba37-61966aa7c5e6
+      responses:
+        200:
+          description: the identifier exists and related visit is returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+        400:
+          description: The uid was not a valid UUID
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: the identifier does not exist in DB
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+    put:
+      tags:
+        - Visit Api
+      summary: Upsert a pet (no read before write as for Cassandra)
+      operationId: upsertVisitUsingPUT
+      parameters:
+        - name: visitId
+          in: path
+          description: visitId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: visit
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Visit'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+        201:
+          description: The visit has been created, uuid is provided in header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+        400:
+          description: The visit was malformed or uid was not valid
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        404:
+          description: Not Found
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+      x-codegen-request-body-name: visit
+    delete:
+      tags:
+        - Visit Api
+      summary: Delete a visit by its unique identifier
+      operationId: deleteByIdUsingDELETE_3
+      parameters:
+        - name: visitId
+          in: path
+          description: Unique identifier of a visit
+          required: true
+          schema:
+            type: string
+          example: 1ff2fbd9-bbb0-4cc1-ba37-61966aa7c5e6
+      responses:
+        200:
+          description: OK
+          content: { }
+        204:
+          description: The pet has been deleted
+          content: { }
+        400:
+          description: The uid was not a valid UUID
+          content: { }
+        401:
+          description: Unauthorized
+          content: { }
+        403:
+          description: Forbidden
+          content: { }
+        500:
+          description: Internal technical error
+          content: { }
+components:
+  schemas:
+    Owner:
+      title: Owner
+      type: object
+      properties:
+        address:
+          type: string
+        city:
+          type: string
+        firstName:
+          type: string
+        id:
+          type: string
+          format: uuid
+        lastName:
+          type: string
+        pets:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Pet'
+        telephone:
+          type: string
+    Pet:
+      title: Pet
+      type: object
+      properties:
+        birthDate:
+          type: string
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        owner:
+          $ref: '#/components/schemas/Owner'
+        type:
+          $ref: '#/components/schemas/PetType'
+        visits:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Visit'
+    PetType:
+      title: PetType
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    Vet:
+      title: Vet
+      type: object
+      properties:
+        firstName:
+          type: string
+        id:
+          type: string
+          format: uuid
+        lastName:
+          type: string
+        specialties:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/VetSpecialty'
+    VetSpecialty:
+      title: VetSpecialty
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    Visit:
+      title: Visit
+      type: object
+      properties:
+        date:
+          type: string
+        description:
+          type: string
+        id:
+          type: string
+          format: uuid
+        pet:
+          $ref: '#/components/schemas/Pet'

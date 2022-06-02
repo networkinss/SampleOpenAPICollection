@@ -1,0 +1,6 @@
+https://restful-booker.herokuapp.com/booking  (https://restful-booker.herokuapp.com/apidoc/index.html)
+https://httpbin.org/
+https://github.com/public-apis/public-apis
+https://petstore.swagger.io
+
+

@@ -1,0 +1,1319 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI Virtualan Petstore
+  description: This is a sample server Petstore server. For this sample, you can use
+    the api key `special-key` to test the authorization filters.
+  contact: {}
+  license:
+    name: Apache-2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.1
+servers:
+- url: //live.virtualandemo.com/api
+tags:
+- name: persons-api-controller
+  description: the persons API
+- name: pets-api-controller
+  description: the pets API
+- name: riskfactor-api-controller
+  description: the riskfactor API
+- name: store-api-controller
+  description: the store API
+- name: user-api-controller
+  description: the user API
+paths:
+  /persons:
+    get:
+      tags:
+      - persons-api-controller
+      summary: Gets some persons
+      description: Returns a list containing all persons. The list supports paging.
+      operationId: personsGet
+      parameters:
+      - name: pageNumber
+        in: query
+        description: Page number
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+      - name: pageSize
+        in: query
+        description: Number of persons returned
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: A list of Person
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Persons'
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+        500:
+          description: An unexpected error occured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      deprecated: false
+    post:
+      tags:
+      - persons-api-controller
+      summary: Creates a person
+      description: Adds a new person to the persons list.
+      operationId: personsPost
+      requestBody:
+        description: The person to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Person'
+        required: false
+      responses:
+        200:
+          description: OK
+          content: {}
+        201:
+          description: Created
+          content: {}
+        204:
+          description: Person succesfully created.
+          content: {}
+        400:
+          description: Person couldn't have been created.
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+        500:
+          description: An unexpected error occured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      deprecated: false
+      x-codegen-request-body-name: person
+  /persons/{username}:
+    get:
+      tags:
+      - persons-api-controller
+      summary: Gets a person
+      description: Returns a single person for its username.
+      operationId: personsUsernameGet
+      parameters:
+      - name: username
+        in: path
+        description: The person's username
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: A Person
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Person does not exist.
+          content: {}
+        500:
+          description: An unexpected error occured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      deprecated: false
+    delete:
+      tags:
+      - persons-api-controller
+      summary: Deletes a person
+      description: Delete a single person identified via its username
+      operationId: personsUsernameDelete
+      parameters:
+      - name: username
+        in: path
+        description: The person's username
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content: {}
+        204:
+          description: Person successfully deleted.
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Person does not exist.
+          content: {}
+        500:
+          description: An unexpected error occured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      deprecated: false
+  /persons/{username}/collectingItems:
+    get:
+      tags:
+      - persons-api-controller
+      summary: Gets a person's collecting items list
+      description: Returns a list containing all items this person is looking for.
+        The list supports paging.
+      operationId: personsUsernameCollectingItemsGet
+      parameters:
+      - name: pageNumber
+        in: query
+        description: Page number
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+      - name: pageSize
+        in: query
+        description: Number of persons returned
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+      - name: username
+        in: path
+        description: The person's username
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: A collected items list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollectingItems'
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Person does not exist.
+          content: {}
+        500:
+          description: An unexpected error occured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      deprecated: false
+  /persons/{username}/friends:
+    get:
+      tags:
+      - persons-api-controller
+      summary: Gets a person's friends
+      description: Returns a list containing all persons. The list supports paging.
+      operationId: personsUsernameFriendsGet
+      parameters:
+      - name: pageNumber
+        in: query
+        description: Page number
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+      - name: pageSize
+        in: query
+        description: Number of persons returned
+        allowEmptyValue: false
+        schema:
+          type: integer
+          format: int32
+      - name: username
+        in: path
+        description: The person's username
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: A person's friends list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedPersons'
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Person does not exist.
+          content: {}
+        500:
+          description: An unexpected error occured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      deprecated: false
+  /pets:
+    post:
+      tags:
+      - pet
+      summary: Add a new pet to the store
+      operationId: addPet
+      requestBody:
+        description: Pet object that needs to be added to the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+        required: true
+      responses:
+        200:
+          description: OK
+          content: {}
+        201:
+          description: Created
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+        405:
+          description: Invalid input
+          content: {}
+      deprecated: false
+      security:
+      - petstore_auth:
+        - write:pets
+        - read:pets
+      x-codegen-request-body-name: body
+  /pets/findByStatus:
+    get:
+      tags:
+      - pet
+      summary: Finds Pets by status
+      description: Multiple status values can be provided with comma separated strings
+      operationId: findPetsByStatus
+      parameters:
+      - name: status
+        in: query
+        description: Status values that need to be considered for filter
+        required: true
+        allowEmptyValue: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+          enum:
+          - available
+          - pending
+          - sold
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+        400:
+          description: Invalid status value
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+      deprecated: false
+      security:
+      - petstore_auth:
+        - write:pets
+        - read:pets
+  /pets/findByTags:
+    get:
+      tags:
+      - pet
+      summary: Finds Pets by tags
+      description: Multiple tags can be provided with comma separated strings. Use
+        tag1, tag2, tag3 for testing.
+      operationId: findPetsByTags
+      parameters:
+      - name: tags
+        in: query
+        description: Tags to filter by
+        required: true
+        allowEmptyValue: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+        400:
+          description: Invalid tag value
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+      deprecated: false
+      security:
+      - petstore_auth:
+        - write:pets
+        - read:pets
+  /pets/{petId}:
+    get:
+      tags:
+      - pet
+      summary: Find pet by ID
+      description: Returns a single pet
+      operationId: getPetById
+      parameters:
+      - name: petId
+        in: path
+        description: ID of pet to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Pet not found
+          content: {}
+      deprecated: false
+      security:
+      - api_key: []
+    put:
+      tags:
+      - pet
+      summary: Update an existing pet
+      operationId: updatePet
+      parameters:
+      - name: petId
+        in: path
+        description: ID of pet to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Pet object that needs to be added to the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+        required: true
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        201:
+          description: Created
+          content: {}
+        400:
+          description: Invalid ID supplied
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Pet not found
+          content: {}
+        405:
+          description: Validation exception
+          content: {}
+      deprecated: false
+      security:
+      - petstore_auth:
+        - write:pets
+        - read:pets
+      x-codegen-request-body-name: body
+    delete:
+      tags:
+      - pet
+      summary: Deletes a pet
+      operationId: deletePet
+      parameters:
+      - name: api_key
+        in: header
+        description: api_key
+        schema:
+          type: string
+      - name: petId
+        in: path
+        description: Pet id to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: OK
+          content: {}
+        204:
+          description: No Content
+          content: {}
+        400:
+          description: Invalid pet value
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+      deprecated: false
+      security:
+      - petstore_auth:
+        - write:pets
+        - read:pets
+    patch:
+      tags:
+      - pet
+      summary: patch an existing pet
+      operationId: patchPet
+      parameters:
+      - name: petId
+        in: path
+        description: ID of pet to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Pet object that needs to be added to the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+        required: true
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        204:
+          description: No Content
+          content: {}
+        400:
+          description: Invalid ID supplied
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Pet not found
+          content: {}
+        405:
+          description: Validation exception
+          content: {}
+      deprecated: false
+      security:
+      - petstore_auth:
+        - write:pets
+        - read:pets
+      x-codegen-request-body-name: body
+  /riskfactor/compute:
+    post:
+      tags:
+      - riskfactor
+      summary: riskfactor
+      operationId: riskfactor
+      requestBody:
+        description: riskfactor
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RiskFactorRequestDto'
+        required: true
+      responses:
+        200:
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RiskFactorResponseDto'
+        201:
+          description: Created
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+      deprecated: false
+      x-codegen-request-body-name: riskFactorRequestDto
+  /store/inventory:
+    get:
+      tags:
+      - store
+      summary: Returns pet inventories by status
+      description: Returns a map of status codes to quantities
+      operationId: getInventory
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+      deprecated: false
+      security:
+      - api_key: []
+  /store/order:
+    post:
+      tags:
+      - store
+      summary: Place an order for a pet
+      operationId: placeOrder
+      requestBody:
+        description: order placed for purchasing the pet
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+        required: true
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        201:
+          description: Created
+          content: {}
+        400:
+          description: Invalid Order
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+      deprecated: false
+      x-codegen-request-body-name: body
+  /store/order/{orderId}:
+    get:
+      tags:
+      - store
+      summary: Find purchase order by ID
+      description: For valid response try integer IDs with value <= 5 or > 10. Other
+        values will generated exceptions
+      operationId: getOrderById
+      parameters:
+      - name: orderId
+        in: path
+        description: ID of pet that needs to be fetched
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Order not found
+          content: {}
+      deprecated: false
+    delete:
+      tags:
+      - store
+      summary: Delete purchase order by ID
+      description: For valid response try integer IDs with value < 1000. Anything
+        above 1000 or nonintegers will generate API errors
+      operationId: deleteOrder
+      parameters:
+      - name: orderId
+        in: path
+        description: ID of the order that needs to be deleted
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content: {}
+        204:
+          description: No Content
+          content: {}
+        400:
+          description: Invalid ID supplied
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Order not found
+          content: {}
+      deprecated: false
+  /user:
+    post:
+      tags:
+      - user
+      summary: Create user
+      description: This can only be done by the logged in user.
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        200:
+          description: successful operation
+          content: {}
+        201:
+          description: Created
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+      deprecated: false
+      x-codegen-request-body-name: body
+  /user/createWithArray:
+    post:
+      tags:
+      - user
+      summary: Creates list of users with given input array
+      operationId: createUsersWithArrayInput
+      requestBody:
+        description: List of user object
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        200:
+          description: successful operation
+          content: {}
+        201:
+          description: Created
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+      deprecated: false
+      x-codegen-request-body-name: body
+  /user/createWithList:
+    post:
+      tags:
+      - user
+      summary: Creates list of users with given input array
+      operationId: createUsersWithListInput
+      requestBody:
+        description: List of user object
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        200:
+          description: successful operation
+          content: {}
+        201:
+          description: Created
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+      deprecated: false
+      x-codegen-request-body-name: body
+  /user/login:
+    get:
+      tags:
+      - user
+      summary: Logs user into the system
+      operationId: loginUser
+      parameters:
+      - name: password
+        in: query
+        description: The password for login in clear text
+        required: true
+        allowEmptyValue: false
+        schema:
+          type: string
+      - name: username
+        in: query
+        description: The user name for login
+        required: true
+        allowEmptyValue: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: string
+        400:
+          description: Invalid username/password supplied
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+      deprecated: false
+  /user/logout:
+    get:
+      tags:
+      - user
+      summary: Logs out current logged in user session
+      operationId: logoutUser
+      responses:
+        200:
+          description: successful operation
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+      deprecated: false
+  /user/{username}:
+    get:
+      tags:
+      - user
+      summary: Get user by user name
+      operationId: getUserByName
+      parameters:
+      - name: username
+        in: path
+        description: The name that needs to be fetched. Use user1 for testing.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Invalid username supplied
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: User not found
+          content: {}
+      deprecated: false
+    put:
+      tags:
+      - user
+      summary: Updated user
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      parameters:
+      - name: username
+        in: path
+        description: name that need to be deleted
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Updated user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        200:
+          description: OK
+          content: {}
+        201:
+          description: Created
+          content: {}
+        400:
+          description: Invalid user supplied
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: User not found
+          content: {}
+      deprecated: false
+      x-codegen-request-body-name: body
+    delete:
+      tags:
+      - user
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+      - name: username
+        in: path
+        description: The name that needs to be deleted
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content: {}
+        204:
+          description: No Content
+          content: {}
+        400:
+          description: Invalid username supplied
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: User not found
+          content: {}
+      deprecated: false
+components:
+  schemas:
+    Category:
+      title: Category
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+      description: A category for a pet
+    CollectingItem:
+      title: CollectingItem
+      required:
+      - itemType
+      type: object
+      properties:
+        imageId:
+          type: string
+        itemType:
+          type: string
+          enum:
+          - Vinyl
+          - VHS
+        maxPrice:
+          type: number
+          format: double
+    Error:
+      title: Error
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        code:
+          type: string
+          enum:
+          - DBERR
+          - NTERR
+          - UNERR
+        message:
+          type: string
+    Order:
+      title: Order
+      type: object
+      properties:
+        complete:
+          type: boolean
+        id:
+          type: integer
+          format: int64
+        petId:
+          type: integer
+          format: int64
+        quantity:
+          type: integer
+          format: int32
+        shipDate:
+          type: string
+          format: date-time
+        status:
+          type: string
+          description: Order Status
+          enum:
+          - placed
+          - approved
+          - delivered
+      description: An order for a pets from the pet store
+    PagedCollectingItems:
+      title: PagedCollectingItems
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          format: int32
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectingItem'
+        pageSize:
+          type: integer
+          format: int32
+        totalItems:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+    PagedPersons:
+      title: PagedPersons
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          format: int32
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+        pageSize:
+          type: integer
+          format: int32
+        totalItems:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+    Person:
+      title: Person
+      required:
+      - username
+      type: object
+      properties:
+        dateOfBirth:
+          type: string
+          format: date
+        firstName:
+          type: string
+        lastName:
+          type: string
+        lastTimeOnline:
+          type: string
+          format: date-time
+          readOnly: true
+        spokenLanguages:
+          type: object
+          additionalProperties:
+            type: string
+        username:
+          type: string
+    Persons:
+      title: Persons
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+    Pet:
+      title: Pet
+      required:
+      - name
+      - photoUrls
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/Category'
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          example: doggie
+        photoUrls:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          description: pet status in the store
+          enum:
+          - available
+          - pending
+          - sold
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        type:
+          type: string
+          example: DOGS
+      description: A pet for sale in the pet store
+    RiskFactorRequestDto:
+      title: RiskFactorRequestDto
+      type: object
+      properties:
+        birthday:
+          type: string
+          format: date
+        postalCode:
+          type: string
+    RiskFactorResponseDto:
+      title: RiskFactorResponseDto
+      type: object
+      properties:
+        riskFactor:
+          type: integer
+          format: int64
+    Tag:
+      title: Tag
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+      description: A tag for a pet
+    User:
+      title: User
+      type: object
+      properties:
+        email:
+          type: string
+        firstName:
+          type: string
+        id:
+          type: integer
+          format: int64
+        lastName:
+          type: string
+        password:
+          type: string
+        phone:
+          type: string
+        userStatus:
+          type: integer
+          description: User Status
+          format: int32
+        username:
+          type: string
+      description: A User who is purchasing from the pet store
+    VHS:
+      title: VHS
+      allOf:
+      - $ref: '#/components/schemas/CollectingItem'
+      - title: VHS
+        required:
+        - itemType
+        - movieTitle
+        type: object
+        properties:
+          director:
+            type: string
+          imageId:
+            type: string
+          itemType:
+            type: string
+            enum:
+            - Vinyl
+            - VHS
+          maxPrice:
+            type: number
+            format: double
+          movieTitle:
+            type: string
+    Vinyl:
+      title: Vinyl
+      allOf:
+      - $ref: '#/components/schemas/CollectingItem'
+      - title: Vinyl
+        required:
+        - albumName
+        - artist
+        - itemType
+        type: object
+        properties:
+          albumName:
+            type: string
+          artist:
+            type: string
+          imageId:
+            type: string
+          itemType:
+            type: string
+            enum:
+            - Vinyl
+            - VHS
+          maxPrice:
+            type: number
+            format: double
+  securitySchemes:
+    petstore_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://petstore3.swagger.io/oauth/authorize
+          scopes:
+            write:pets: modify pets in your account
+            read:pets: read your pets
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
+

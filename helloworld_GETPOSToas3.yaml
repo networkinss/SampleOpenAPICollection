@@ -1,0 +1,38 @@
+openapi: 3.0.1
+info:
+  title: Hello World API
+  version: "1.0"
+  description: Hello World Sample with GET and POST.
+paths:
+  /hello/:
+    get:
+      description: Returns a greeting to the user!
+      parameters:
+        - description: The name of the user to greet.
+          in: query
+          name: user
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+             applicaton/json::
+                schema:
+                  type: string
+          description: Returns the greeting.
+        "400":
+          content: {}
+          description: Invalid characters in "user" were provided.
+    post:
+      parameters:
+      - name: user
+        in: query
+        schema:
+          type: string
+          format: string
+      responses:
+        "201":
+           description: response
+components:
+  schemas: {}

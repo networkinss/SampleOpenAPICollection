@@ -1,0 +1,5 @@
+openapi: 3.0.1
+info:
+  title: OAS3 specification
+  version: 1.0.1
+paths: {}
