@@ -27,7 +27,8 @@ externalDocs:
   description: Find out more about Swagger
   url: http://swagger.io
 servers:
-  - url: /api/v3
+  - url: http://localhost:8080/api/v3
+    description: Localhost with port 8080.
 tags:
   - name: pet
     description: Everything about your Pets
