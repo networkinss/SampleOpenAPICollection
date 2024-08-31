@@ -1,0 +1,3 @@
+Postman
+Generate an OpenAPI Schema | Postman Public Workspace | Postman API Network
+https://www.postman.com/postman/workspace/postman-public-workspace/request/5922408-3b169388-c199-43d0-8247-721b312c0da4
