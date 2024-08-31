@@ -1,0 +1,3005 @@
+{
+    "tags": {
+        "@cats": {
+            "name": "@cats",
+            "title": "/cats",
+            "interactionGroups": [
+                {
+                    "protocol": "http",
+                    "interactions": [
+                        "http GET /cats",
+                        "http POST /cats",
+                        "http GET /cats/{id}",
+                        "http PUT /cats/{id}",
+                        "http PATCH /cats/{id}",
+                        "http DELETE /cats/{id}",
+                        "http GET /cats/{id}/friends/{friendId}"
+                    ]
+                }
+            ]
+        },
+        "@dogs": {
+            "name": "@dogs",
+            "title": "/dogs",
+            "interactionGroups": [
+                {
+                    "protocol": "http",
+                    "interactions": [
+                        "http GET /dogs",
+                        "http POST /dogs",
+                        "http GET /dogs/{id}",
+                        "http PUT /dogs/{id}",
+                        "http DELETE /dogs/{id}"
+                    ]
+                }
+            ]
+        },
+        "@pigs": {
+            "name": "@pigs",
+            "title": "/pigs",
+            "interactionGroups": [
+                {
+                    "protocol": "http",
+                    "interactions": [
+                        "http GET /pigs",
+                        "http POST /pigs",
+                        "http GET /pigs/{id}",
+                        "http PUT /pigs/{id}",
+                        "http DELETE /pigs/{id}"
+                    ]
+                }
+            ]
+        }
+    },
+    "info": {
+        "title": "Pets REST API",
+        "version": "1.0",
+        "description": "## Overview\n\nThe **Pets REST API** allows you to manage your pets.\n\nPowered by [JSight](http://jsight.io)©."
+    },
+    "servers": {
+        "@prod": {
+            "annotation": "Production server.",
+            "baseUrl": "https://pets.com/api/1.0"
+        },
+        "@test": {
+            "annotation": "Test server.",
+            "baseUrl": "https://192.168.0.100/1.0"
+        }
+    },
+    "userTypes": {
+        "@pet": {
+            "annotation": "A pet.",
+            "schema": {
+                "content": {
+                    "tokenType": "object",
+                    "type": "object",
+                    "children": [
+                        {
+                            "key": "id",
+                            "tokenType": "reference",
+                            "type": "@petId",
+                            "scalarValue": "@petId",
+                            "optional": false
+                        },
+                        {
+                            "key": "name",
+                            "tokenType": "string",
+                            "type": "string",
+                            "scalarValue": "Tom",
+                            "optional": false
+                        },
+                        {
+                            "key": "type",
+                            "tokenType": "string",
+                            "type": "enum",
+                            "scalarValue": "PIG",
+                            "rules": [
+                                {
+                                    "key": "enum",
+                                    "tokenType": "array",
+                                    "children": [
+                                        {
+                                            "tokenType": "string",
+                                            "scalarValue": "CAT"
+                                        },
+                                        {
+                                            "tokenType": "string",
+                                            "scalarValue": "DOG"
+                                        },
+                                        {
+                                            "tokenType": "string",
+                                            "scalarValue": "PIG"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "age",
+                            "tokenType": "number",
+                            "type": "integer",
+                            "scalarValue": "10",
+                            "rules": [
+                                {
+                                    "key": "min",
+                                    "tokenType": "number",
+                                    "scalarValue": "0"
+                                },
+                                {
+                                    "key": "max",
+                                    "tokenType": "number",
+                                    "scalarValue": "99"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "email",
+                            "tokenType": "string",
+                            "type": "email",
+                            "scalarValue": "tom@pets.com",
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "string",
+                                    "scalarValue": "email"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "uri",
+                            "tokenType": "string",
+                            "type": "uri",
+                            "scalarValue": "http://tom.pets.com",
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "string",
+                                    "scalarValue": "uri"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "birthday",
+                            "tokenType": "string",
+                            "type": "date",
+                            "scalarValue": "2012-01-03",
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "string",
+                                    "scalarValue": "date"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "uuid",
+                            "tokenType": "string",
+                            "type": "uuid",
+                            "scalarValue": "550e8400-e29b-41d4-a716-446655440000",
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "string",
+                                    "scalarValue": "uuid"
+                                }
+                            ],
+                            "optional": false
+                        }
+                    ],
+                    "optional": false
+                },
+                "example": "{\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}",
+                "notation": "jsight",
+                "usedUserTypes": [
+                    "@petId"
+                ]
+            }
+        },
+        "@cat": {
+            "annotation": "A cat.",
+            "schema": {
+                "content": {
+                    "rules": [
+                        {
+                            "key": "allOf",
+                            "tokenType": "reference",
+                            "scalarValue": "@pet"
+                        }
+                    ],
+                    "tokenType": "object",
+                    "type": "object",
+                    "children": [
+                        {
+                            "key": "id",
+                            "tokenType": "reference",
+                            "type": "@petId",
+                            "scalarValue": "@petId",
+                            "inheritedFrom": "@pet",
+                            "optional": false
+                        },
+                        {
+                            "key": "name",
+                            "tokenType": "string",
+                            "type": "string",
+                            "scalarValue": "Tom",
+                            "inheritedFrom": "@pet",
+                            "optional": false
+                        },
+                        {
+                            "key": "type",
+                            "tokenType": "string",
+                            "type": "enum",
+                            "scalarValue": "PIG",
+                            "inheritedFrom": "@pet",
+                            "rules": [
+                                {
+                                    "key": "enum",
+                                    "tokenType": "array",
+                                    "children": [
+                                        {
+                                            "tokenType": "string",
+                                            "scalarValue": "CAT"
+                                        },
+                                        {
+                                            "tokenType": "string",
+                                            "scalarValue": "DOG"
+                                        },
+                                        {
+                                            "tokenType": "string",
+                                            "scalarValue": "PIG"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "age",
+                            "tokenType": "number",
+                            "type": "integer",
+                            "scalarValue": "10",
+                            "inheritedFrom": "@pet",
+                            "rules": [
+                                {
+                                    "key": "min",
+                                    "tokenType": "number",
+                                    "scalarValue": "0"
+                                },
+                                {
+                                    "key": "max",
+                                    "tokenType": "number",
+                                    "scalarValue": "99"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "email",
+                            "tokenType": "string",
+                            "type": "email",
+                            "scalarValue": "tom@pets.com",
+                            "inheritedFrom": "@pet",
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "string",
+                                    "scalarValue": "email"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "uri",
+                            "tokenType": "string",
+                            "type": "uri",
+                            "scalarValue": "http://tom.pets.com",
+                            "inheritedFrom": "@pet",
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "string",
+                                    "scalarValue": "uri"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "birthday",
+                            "tokenType": "string",
+                            "type": "date",
+                            "scalarValue": "2012-01-03",
+                            "inheritedFrom": "@pet",
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "string",
+                                    "scalarValue": "date"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "uuid",
+                            "tokenType": "string",
+                            "type": "uuid",
+                            "scalarValue": "550e8400-e29b-41d4-a716-446655440000",
+                            "inheritedFrom": "@pet",
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "string",
+                                    "scalarValue": "uuid"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "status",
+                            "tokenType": "string",
+                            "type": "string",
+                            "scalarValue": "relaxing",
+                            "optional": false
+                        },
+                        {
+                            "key": "bestFriend",
+                            "tokenType": "reference",
+                            "type": "@cat",
+                            "scalarValue": "@cat",
+                            "rules": [
+                                {
+                                    "key": "optional",
+                                    "tokenType": "boolean",
+                                    "scalarValue": "true"
+                                }
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "rules": [
+                                {
+                                    "key": "additionalProperties",
+                                    "tokenType": "boolean",
+                                    "scalarValue": "true"
+                                }
+                            ],
+                            "key": "topFriends",
+                            "tokenType": "object",
+                            "type": "object",
+                            "children": [
+                                {
+                                    "key": "@petName",
+                                    "tokenType": "reference",
+                                    "type": "mixed",
+                                    "scalarValue": "@cat | @pig",
+                                    "isKeyUserTypeRef": true,
+                                    "optional": false
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "rules": [
+                                {
+                                    "key": "maxItems",
+                                    "tokenType": "number",
+                                    "scalarValue": "10"
+                                }
+                            ],
+                            "key": "topEnemies",
+                            "tokenType": "array",
+                            "type": "array",
+                            "children": [
+                                {
+                                    "tokenType": "reference",
+                                    "type": "@dog",
+                                    "scalarValue": "@dog",
+                                    "optional": true
+                                }
+                            ],
+                            "optional": false
+                        }
+                    ],
+                    "optional": false
+                },
+                "example": "{\"status\":\"relaxing\",\"bestFriend\":{\"status\":\"relaxing\",\"bestFriend\":{\"status\":\"relaxing\",\"topFriends\":{},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"},\"topFriends\":{\"C Yi\":{\"status\":\"relaxing\",\"topFriends\":{},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"},\"topFriends\":{\"C Yi\":{\"status\":\"relaxing\",\"bestFriend\":{\"status\":\"relaxing\",\"topFriends\":{},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"},\"topFriends\":{\"C Yi\":{\"status\":\"relaxing\",\"topFriends\":{},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}",
+                "notation": "jsight",
+                "usedUserTypes": [
+                    "@pet",
+                    "@cat",
+                    "@pig",
+                    "@petName",
+                    "@dog"
+                ]
+            }
+        },
+        "@dog": {
+            "annotation": "A dog.",
+            "schema": {
+                "content": {
+                    "rules": [
+                        {
+                            "key": "allOf",
+                            "tokenType": "reference",
+                            "scalarValue": "@pet"
+                        }
+                    ],
+                    "tokenType": "object",
+                    "type": "object",
+                    "children": [
+                        {
+                            "key": "id",
+                            "tokenType": "reference",
+                            "type": "@petId",
+                            "scalarValue": "@petId",
+                            "inheritedFrom": "@pet",
+                            "optional": false
+                        },
+                        {
+                            "key": "name",
+                            "tokenType": "string",
+                            "type": "string",
+                            "scalarValue": "Tom",
+                            "inheritedFrom": "@pet",
+                            "optional": false
+                        },
+                        {
+                            "key": "type",
+                            "tokenType": "string",
+                            "type": "enum",
+                            "scalarValue": "PIG",
+                            "inheritedFrom": "@pet",
+                            "rules": [
+                                {
+                                    "key": "enum",
+                                    "tokenType": "array",
+                                    "children": [
+                                        {
+                                            "tokenType": "string",
+                                            "scalarValue": "CAT"
+                                        },
+                                        {
+                                            "tokenType": "string",
+                                            "scalarValue": "DOG"
+                                        },
+                                        {
+                                            "tokenType": "string",
+                                            "scalarValue": "PIG"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "age",
+                            "tokenType": "number",
+                            "type": "integer",
+                            "scalarValue": "10",
+                            "inheritedFrom": "@pet",
+                            "rules": [
+                                {
+                                    "key": "min",
+                                    "tokenType": "number",
+                                    "scalarValue": "0"
+                                },
+                                {
+                                    "key": "max",
+                                    "tokenType": "number",
+                                    "scalarValue": "99"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "email",
+                            "tokenType": "string",
+                            "type": "email",
+                            "scalarValue": "tom@pets.com",
+                            "inheritedFrom": "@pet",
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "string",
+                                    "scalarValue": "email"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "uri",
+                            "tokenType": "string",
+                            "type": "uri",
+                            "scalarValue": "http://tom.pets.com",
+                            "inheritedFrom": "@pet",
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "string",
+                                    "scalarValue": "uri"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "birthday",
+                            "tokenType": "string",
+                            "type": "date",
+                            "scalarValue": "2012-01-03",
+                            "inheritedFrom": "@pet",
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "string",
+                                    "scalarValue": "date"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "uuid",
+                            "tokenType": "string",
+                            "type": "uuid",
+                            "scalarValue": "550e8400-e29b-41d4-a716-446655440000",
+                            "inheritedFrom": "@pet",
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "string",
+                                    "scalarValue": "uuid"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "friendIds",
+                            "tokenType": "array",
+                            "type": "array",
+                            "note": "Only dog ids are allowed.",
+                            "children": [
+                                {
+                                    "tokenType": "reference",
+                                    "type": "@petId",
+                                    "scalarValue": "@petId",
+                                    "optional": true
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "isDangerous",
+                            "tokenType": "boolean",
+                            "type": "boolean",
+                            "scalarValue": "false",
+                            "optional": false
+                        },
+                        {
+                            "key": "legacyId",
+                            "tokenType": "number",
+                            "type": "mixed",
+                            "scalarValue": "1",
+                            "rules": [
+                                {
+                                    "key": "or",
+                                    "tokenType": "array",
+                                    "children": [
+                                        {
+                                            "tokenType": "object",
+                                            "children": [
+                                                {
+                                                    "key": "type",
+                                                    "tokenType": "string",
+                                                    "scalarValue": "integer"
+                                                },
+                                                {
+                                                    "key": "min",
+                                                    "tokenType": "number",
+                                                    "scalarValue": "0"
+                                                },
+                                                {
+                                                    "key": "exclusiveMinimum",
+                                                    "tokenType": "boolean",
+                                                    "scalarValue": "true"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "tokenType": "object",
+                                            "children": [
+                                                {
+                                                    "key": "type",
+                                                    "tokenType": "string",
+                                                    "scalarValue": "string"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "key": "optional",
+                                    "tokenType": "boolean",
+                                    "scalarValue": "true"
+                                }
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "string",
+                                    "scalarValue": "any"
+                                }
+                            ],
+                            "key": "additionalData",
+                            "tokenType": "object",
+                            "type": "any",
+                            "note": "Field for legacy.",
+                            "children": [],
+                            "optional": false
+                        }
+                    ],
+                    "optional": false
+                },
+                "example": "{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}",
+                "notation": "jsight",
+                "usedUserTypes": [
+                    "@pet",
+                    "@petId"
+                ]
+            }
+        },
+        "@pig": {
+            "annotation": "A pig.",
+            "schema": {
+                "content": {
+                    "rules": [
+                        {
+                            "key": "allOf",
+                            "tokenType": "reference",
+                            "scalarValue": "@pet"
+                        }
+                    ],
+                    "tokenType": "object",
+                    "type": "object",
+                    "children": [
+                        {
+                            "key": "id",
+                            "tokenType": "reference",
+                            "type": "@petId",
+                            "scalarValue": "@petId",
+                            "inheritedFrom": "@pet",
+                            "optional": false
+                        },
+                        {
+                            "key": "name",
+                            "tokenType": "string",
+                            "type": "string",
+                            "scalarValue": "Tom",
+                            "inheritedFrom": "@pet",
+                            "optional": false
+                        },
+                        {
+                            "key": "type",
+                            "tokenType": "string",
+                            "type": "enum",
+                            "scalarValue": "PIG",
+                            "inheritedFrom": "@pet",
+                            "rules": [
+                                {
+                                    "key": "enum",
+                                    "tokenType": "array",
+                                    "children": [
+                                        {
+                                            "tokenType": "string",
+                                            "scalarValue": "CAT"
+                                        },
+                                        {
+                                            "tokenType": "string",
+                                            "scalarValue": "DOG"
+                                        },
+                                        {
+                                            "tokenType": "string",
+                                            "scalarValue": "PIG"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "age",
+                            "tokenType": "number",
+                            "type": "integer",
+                            "scalarValue": "10",
+                            "inheritedFrom": "@pet",
+                            "rules": [
+                                {
+                                    "key": "min",
+                                    "tokenType": "number",
+                                    "scalarValue": "0"
+                                },
+                                {
+                                    "key": "max",
+                                    "tokenType": "number",
+                                    "scalarValue": "99"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "email",
+                            "tokenType": "string",
+                            "type": "email",
+                            "scalarValue": "tom@pets.com",
+                            "inheritedFrom": "@pet",
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "string",
+                                    "scalarValue": "email"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "uri",
+                            "tokenType": "string",
+                            "type": "uri",
+                            "scalarValue": "http://tom.pets.com",
+                            "inheritedFrom": "@pet",
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "string",
+                                    "scalarValue": "uri"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "birthday",
+                            "tokenType": "string",
+                            "type": "date",
+                            "scalarValue": "2012-01-03",
+                            "inheritedFrom": "@pet",
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "string",
+                                    "scalarValue": "date"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "uuid",
+                            "tokenType": "string",
+                            "type": "uuid",
+                            "scalarValue": "550e8400-e29b-41d4-a716-446655440000",
+                            "inheritedFrom": "@pet",
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "string",
+                                    "scalarValue": "uuid"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "temperature",
+                            "tokenType": "number",
+                            "type": "decimal",
+                            "scalarValue": "35.6",
+                            "rules": [
+                                {
+                                    "key": "precision",
+                                    "tokenType": "number",
+                                    "scalarValue": "1"
+                                },
+                                {
+                                    "key": "nullable",
+                                    "tokenType": "boolean",
+                                    "scalarValue": "true"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "pigSize",
+                            "tokenType": "string",
+                            "type": "@pigSize",
+                            "scalarValue": "S",
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "reference",
+                                    "scalarValue": "@pigSize"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "lastWashTime",
+                            "tokenType": "string",
+                            "type": "datetime",
+                            "scalarValue": "2021-01-02T15:04:05+03:00",
+                            "rules": [
+                                {
+                                    "key": "type",
+                                    "tokenType": "string",
+                                    "scalarValue": "datetime"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "rules": [
+                                {
+                                    "key": "additionalProperties",
+                                    "tokenType": "string",
+                                    "scalarValue": "string"
+                                }
+                            ],
+                            "key": "additionalData",
+                            "tokenType": "object",
+                            "type": "object",
+                            "children": [
+                                {
+                                    "key": "key",
+                                    "tokenType": "string",
+                                    "type": "string",
+                                    "scalarValue": "value",
+                                    "optional": false
+                                }
+                            ],
+                            "optional": false
+                        }
+                    ],
+                    "optional": false
+                },
+                "example": "{\"temperature\":35.6,\"pigSize\":\"S\",\"lastWashTime\":\"2021-01-02T15:04:05+03:00\",\"additionalData\":{\"key\":\"value\"},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}",
+                "notation": "jsight",
+                "usedUserTypes": [
+                    "@pet",
+                    "@pigSize"
+                ]
+            }
+        },
+        "@pigSize": {
+            "schema": {
+                "content": {
+                    "tokenType": "string",
+                    "type": "enum",
+                    "scalarValue": "S",
+                    "rules": [
+                        {
+                            "key": "enum",
+                            "tokenType": "array",
+                            "children": [
+                                {
+                                    "tokenType": "string",
+                                    "scalarValue": "XXS"
+                                },
+                                {
+                                    "tokenType": "string",
+                                    "scalarValue": "XS"
+                                },
+                                {
+                                    "tokenType": "string",
+                                    "scalarValue": "S"
+                                },
+                                {
+                                    "tokenType": "string",
+                                    "scalarValue": "M"
+                                },
+                                {
+                                    "tokenType": "string",
+                                    "scalarValue": "L"
+                                },
+                                {
+                                    "tokenType": "string",
+                                    "scalarValue": "XL"
+                                },
+                                {
+                                    "tokenType": "string",
+                                    "scalarValue": "XXL"
+                                }
+                            ]
+                        }
+                    ],
+                    "optional": false
+                },
+                "example": "\"S\"",
+                "notation": "jsight"
+            }
+        },
+        "@petId": {
+            "schema": {
+                "content": {
+                    "tokenType": "string",
+                    "type": "string",
+                    "scalarValue": "GOAT-12345",
+                    "rules": [
+                        {
+                            "key": "regex",
+                            "tokenType": "string",
+                            "scalarValue": "^[A-Z]+-\\d+$"
+                        },
+                        {
+                            "key": "minLength",
+                            "tokenType": "number",
+                            "scalarValue": "3"
+                        },
+                        {
+                            "key": "maxLength",
+                            "tokenType": "number",
+                            "scalarValue": "255"
+                        }
+                    ],
+                    "optional": false
+                },
+                "example": "\"GOAT-12345\"",
+                "notation": "jsight"
+            }
+        },
+        "@petName": {
+            "schema": {
+                "content": "^[A-Z][a-z]*( [A-Z][a-z]*)*$",
+                "example": "C Yi",
+                "notation": "regex"
+            }
+        },
+        "@error": {
+            "annotation": "A common error response.",
+            "schema": {
+                "content": {
+                    "tokenType": "object",
+                    "type": "object",
+                    "children": [
+                        {
+                            "key": "code",
+                            "tokenType": "number",
+                            "type": "integer",
+                            "scalarValue": "12",
+                            "optional": false
+                        },
+                        {
+                            "key": "message",
+                            "tokenType": "string",
+                            "type": "string",
+                            "scalarValue": "Something bad had happened on server...",
+                            "optional": false
+                        }
+                    ],
+                    "optional": false
+                },
+                "example": "{\"code\":12,\"message\":\"Something bad had happened on server...\"}",
+                "notation": "jsight"
+            }
+        },
+        "@commonRequestHeaders": {
+            "schema": {
+                "content": {
+                    "rules": [
+                        {
+                            "key": "allOf",
+                            "tokenType": "array",
+                            "children": [
+                                {
+                                    "tokenType": "reference",
+                                    "scalarValue": "@contentTypeHeader"
+                                },
+                                {
+                                    "tokenType": "reference",
+                                    "scalarValue": "@authHeader"
+                                }
+                            ]
+                        }
+                    ],
+                    "tokenType": "object",
+                    "type": "object",
+                    "children": [
+                        {
+                            "key": "Content-Type",
+                            "tokenType": "string",
+                            "type": "string",
+                            "scalarValue": "application/json",
+                            "inheritedFrom": "@contentTypeHeader",
+                            "rules": [
+                                {
+                                    "key": "const",
+                                    "tokenType": "boolean",
+                                    "scalarValue": "true"
+                                }
+                            ],
+                            "optional": false
+                        },
+                        {
+                            "key": "Authorization",
+                            "tokenType": "string",
+                            "type": "string",
+                            "scalarValue": "Basic dG9tQGNhdC5jb206YWJjMTIz=",
+                            "inheritedFrom": "@authHeader",
+                            "rules": [
+                                {
+                                    "key": "regex",
+                                    "tokenType": "string",
+                                    "scalarValue": "^Basic [A-Za-z0-9+\/=]+$"
+                                }
+                            ],
+                            "optional": false
+                        }
+                    ],
+                    "optional": false
+                },
+                "example": "{\"Content-Type\":\"application/json\",\"Authorization\":\"Basic dG9tQGNhdC5jb206YWJjMTIz=\"}",
+                "notation": "jsight",
+                "usedUserTypes": [
+                    "@contentTypeHeader",
+                    "@authHeader"
+                ]
+            }
+        },
+        "@commonResponseHeaders": {
+            "schema": {
+                "content": {
+                    "rules": [
+                        {
+                            "key": "allOf",
+                            "tokenType": "reference",
+                            "scalarValue": "@contentTypeHeader"
+                        }
+                    ],
+                    "tokenType": "object",
+                    "type": "object",
+                    "children": [
+                        {
+                            "key": "Content-Type",
+                            "tokenType": "string",
+                            "type": "string",
+                            "scalarValue": "application/json",
+                            "inheritedFrom": "@contentTypeHeader",
+                            "rules": [
+                                {
+                                    "key": "const",
+                                    "tokenType": "boolean",
+                                    "scalarValue": "true"
+                                }
+                            ],
+                            "optional": false
+                        }
+                    ],
+                    "optional": false
+                },
+                "example": "{\"Content-Type\":\"application/json\"}",
+                "notation": "jsight",
+                "usedUserTypes": [
+                    "@contentTypeHeader"
+                ]
+            }
+        },
+        "@contentTypeHeader": {
+            "schema": {
+                "content": {
+                    "tokenType": "object",
+                    "type": "object",
+                    "children": [
+                        {
+                            "key": "Content-Type",
+                            "tokenType": "string",
+                            "type": "string",
+                            "scalarValue": "application/json",
+                            "rules": [
+                                {
+                                    "key": "const",
+                                    "tokenType": "boolean",
+                                    "scalarValue": "true"
+                                }
+                            ],
+                            "optional": false
+                        }
+                    ],
+                    "optional": false
+                },
+                "example": "{\"Content-Type\":\"application/json\"}",
+                "notation": "jsight"
+            }
+        },
+        "@authHeader": {
+            "annotation": "Authorization header.",
+            "schema": {
+                "content": {
+                    "tokenType": "object",
+                    "type": "object",
+                    "children": [
+                        {
+                            "key": "Authorization",
+                            "tokenType": "string",
+                            "type": "string",
+                            "scalarValue": "Basic dG9tQGNhdC5jb206YWJjMTIz=",
+                            "rules": [
+                                {
+                                    "key": "regex",
+                                    "tokenType": "string",
+                                    "scalarValue": "^Basic [A-Za-z0-9+\/=]+$"
+                                }
+                            ],
+                            "optional": false
+                        }
+                    ],
+                    "optional": false
+                },
+                "example": "{\"Authorization\":\"Basic dG9tQGNhdC5jb206YWJjMTIz=\"}",
+                "notation": "jsight"
+            }
+        },
+        "@pageQuery": {
+            "schema": {
+                "content": {
+                    "tokenType": "object",
+                    "type": "object",
+                    "children": [
+                        {
+                            "note": "1 by default.",
+                            "key": "page",
+                            "tokenType": "number",
+                            "type": "integer",
+                            "scalarValue": "1",
+                            "rules": [
+                                {
+                                    "key": "optional",
+                                    "tokenType": "boolean",
+                                    "scalarValue": "true"
+                                },
+                                {
+                                    "key": "min",
+                                    "tokenType": "number",
+                                    "scalarValue": "1"
+                                }
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "note": "30 by default.",
+                            "key": "pageSize",
+                            "tokenType": "number",
+                            "type": "integer",
+                            "scalarValue": "30",
+                            "rules": [
+                                {
+                                    "key": "optional",
+                                    "tokenType": "boolean",
+                                    "scalarValue": "true"
+                                },
+                                {
+                                    "key": "min",
+                                    "tokenType": "number",
+                                    "scalarValue": "10"
+                                },
+                                {
+                                    "key": "max",
+                                    "tokenType": "number",
+                                    "scalarValue": "100"
+                                }
+                            ],
+                            "optional": true
+                        }
+                    ],
+                    "optional": false
+                },
+                "example": "{\"page\":1,\"pageSize\":30}",
+                "notation": "jsight"
+            }
+        }
+    },
+    "interactions": {
+        "http GET /cats": {
+            "id": "http GET /cats",
+            "protocol": "http",
+            "httpMethod": "GET",
+            "path": "/cats",
+            "tags": [
+                "@cats"
+            ],
+            "annotation": "Get all cats.",
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "Returns all cats.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "object",
+                                "type": "object",
+                                "children": [
+                                    {
+                                        "key": "items",
+                                        "tokenType": "array",
+                                        "type": "array",
+                                        "children": [
+                                            {
+                                                "tokenType": "reference",
+                                                "type": "@cat",
+                                                "scalarValue": "@cat",
+                                                "optional": true
+                                            }
+                                        ],
+                                        "optional": false
+                                    },
+                                    {
+                                        "key": "itemsCount",
+                                        "tokenType": "number",
+                                        "type": "integer",
+                                        "scalarValue": "25",
+                                        "rules": [
+                                            {
+                                                "key": "min",
+                                                "tokenType": "number",
+                                                "scalarValue": "0"
+                                            }
+                                        ],
+                                        "optional": false
+                                    }
+                                ],
+                                "optional": false
+                            },
+                            "example": "{\"items\":[{\"status\":\"relaxing\",\"bestFriend\":{\"status\":\"relaxing\",\"topFriends\":{},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"},\"topFriends\":{\"C Yi\":{\"status\":\"relaxing\",\"topFriends\":{},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"itemsCount\":25}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@cat"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "http POST /cats": {
+            "id": "http POST /cats",
+            "protocol": "http",
+            "httpMethod": "POST",
+            "path": "/cats",
+            "tags": [
+                "@cats"
+            ],
+            "annotation": "Create a cat.",
+            "request": {
+                "body": {
+                    "format": "json",
+                    "schema": {
+                        "content": {
+                            "tokenType": "reference",
+                            "type": "@cat",
+                            "scalarValue": "@cat",
+                            "optional": false
+                        },
+                        "example": "{\"status\":\"relaxing\",\"bestFriend\":{\"status\":\"relaxing\",\"topFriends\":{},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"},\"topFriends\":{\"C Yi\":{\"status\":\"relaxing\",\"topFriends\":{},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}",
+                        "notation": "jsight",
+                        "usedUserTypes": [
+                            "@cat"
+                        ]
+                    }
+                }
+            },
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "Success.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@cat",
+                                "scalarValue": "@cat",
+                                "optional": false
+                            },
+                            "example": "{\"status\":\"relaxing\",\"bestFriend\":{\"status\":\"relaxing\",\"topFriends\":{},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"},\"topFriends\":{\"C Yi\":{\"status\":\"relaxing\",\"topFriends\":{},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@cat"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "code": "409",
+                    "annotation": "Error.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@error",
+                                "scalarValue": "@error",
+                                "optional": false
+                            },
+                            "example": "{\"code\":12,\"message\":\"Something bad had happened on server...\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@error"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "http GET /cats/{id}": {
+            "id": "http GET /cats/{id}",
+            "protocol": "http",
+            "httpMethod": "GET",
+            "path": "/cats/{id}",
+            "pathVariables": {
+                "schema": {
+                    "content": {
+                        "tokenType": "object",
+                        "type": "object",
+                        "children": [
+                            {
+                                "note": "Cat's id.",
+                                "key": "id",
+                                "tokenType": "string",
+                                "type": "@petId",
+                                "scalarValue": "CAT-123",
+                                "rules": [
+                                    {
+                                        "key": "type",
+                                        "tokenType": "reference",
+                                        "scalarValue": "@petId"
+                                    }
+                                ],
+                                "optional": false
+                            }
+                        ],
+                        "optional": false
+                    },
+                    "notation": "jsight",
+                    "usedUserTypes": [
+                        "@petId"
+                    ]
+                }
+            },
+            "tags": [
+                "@cats"
+            ],
+            "annotation": "Get a cat by its id.",
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "Return a cat.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@cat",
+                                "scalarValue": "@cat",
+                                "optional": false
+                            },
+                            "example": "{\"status\":\"relaxing\",\"bestFriend\":{\"status\":\"relaxing\",\"topFriends\":{},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"},\"topFriends\":{\"C Yi\":{\"status\":\"relaxing\",\"topFriends\":{},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@cat"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "code": "404",
+                    "annotation": "A cat is not found.",
+                    "body": {
+                        "format": "binary",
+                        "schema": {
+                            "notation": "empty"
+                        }
+                    }
+                }
+            ]
+        },
+        "http PUT /cats/{id}": {
+            "id": "http PUT /cats/{id}",
+            "protocol": "http",
+            "httpMethod": "PUT",
+            "path": "/cats/{id}",
+            "pathVariables": {
+                "schema": {
+                    "content": {
+                        "tokenType": "object",
+                        "type": "object",
+                        "children": [
+                            {
+                                "note": "Cat's id.",
+                                "key": "id",
+                                "tokenType": "string",
+                                "type": "@petId",
+                                "scalarValue": "CAT-123",
+                                "rules": [
+                                    {
+                                        "key": "type",
+                                        "tokenType": "reference",
+                                        "scalarValue": "@petId"
+                                    }
+                                ],
+                                "optional": false
+                            }
+                        ],
+                        "optional": false
+                    },
+                    "notation": "jsight",
+                    "usedUserTypes": [
+                        "@petId"
+                    ]
+                }
+            },
+            "tags": [
+                "@cats"
+            ],
+            "annotation": "Update a cat.",
+            "request": {
+                "body": {
+                    "format": "json",
+                    "schema": {
+                        "content": {
+                            "tokenType": "reference",
+                            "type": "@cat",
+                            "scalarValue": "@cat",
+                            "optional": false
+                        },
+                        "example": "{\"status\":\"relaxing\",\"bestFriend\":{\"status\":\"relaxing\",\"topFriends\":{},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"},\"topFriends\":{\"C Yi\":{\"status\":\"relaxing\",\"topFriends\":{},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}",
+                        "notation": "jsight",
+                        "usedUserTypes": [
+                            "@cat"
+                        ]
+                    }
+                }
+            },
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "Returns an updated cat.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@cat",
+                                "scalarValue": "@cat",
+                                "optional": false
+                            },
+                            "example": "{\"status\":\"relaxing\",\"bestFriend\":{\"status\":\"relaxing\",\"topFriends\":{},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"},\"topFriends\":{\"C Yi\":{\"status\":\"relaxing\",\"topFriends\":{},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@cat"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "code": "404",
+                    "annotation": "A cat is not found.",
+                    "body": {
+                        "format": "binary",
+                        "schema": {
+                            "notation": "empty"
+                        }
+                    }
+                },
+                {
+                    "code": "409",
+                    "annotation": "Some error.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@error",
+                                "scalarValue": "@error",
+                                "optional": false
+                            },
+                            "example": "{\"code\":12,\"message\":\"Something bad had happened on server...\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@error"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "http PATCH /cats/{id}": {
+            "id": "http PATCH /cats/{id}",
+            "protocol": "http",
+            "httpMethod": "PATCH",
+            "path": "/cats/{id}",
+            "pathVariables": {
+                "schema": {
+                    "content": {
+                        "tokenType": "object",
+                        "type": "object",
+                        "children": [
+                            {
+                                "note": "Cat's id.",
+                                "key": "id",
+                                "tokenType": "string",
+                                "type": "@petId",
+                                "scalarValue": "CAT-123",
+                                "rules": [
+                                    {
+                                        "key": "type",
+                                        "tokenType": "reference",
+                                        "scalarValue": "@petId"
+                                    }
+                                ],
+                                "optional": false
+                            }
+                        ],
+                        "optional": false
+                    },
+                    "notation": "jsight",
+                    "usedUserTypes": [
+                        "@petId"
+                    ]
+                }
+            },
+            "tags": [
+                "@cats"
+            ],
+            "annotation": "Update a cat's status.",
+            "request": {
+                "body": {
+                    "format": "json",
+                    "schema": {
+                        "content": {
+                            "tokenType": "object",
+                            "type": "object",
+                            "children": [
+                                {
+                                    "note": "New status of the cat.",
+                                    "key": "status",
+                                    "tokenType": "string",
+                                    "type": "string",
+                                    "scalarValue": "relaxing",
+                                    "optional": false
+                                }
+                            ],
+                            "optional": false
+                        },
+                        "example": "{\"status\":\"relaxing\"}",
+                        "notation": "jsight"
+                    }
+                }
+            },
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "Ok.",
+                    "body": {
+                        "format": "binary",
+                        "schema": {
+                            "notation": "any"
+                        }
+                    }
+                },
+                {
+                    "code": "409",
+                    "annotation": "Some error.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@error",
+                                "scalarValue": "@error",
+                                "optional": false
+                            },
+                            "example": "{\"code\":12,\"message\":\"Something bad had happened on server...\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@error"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "code": "404",
+                    "annotation": "A cat is not found.",
+                    "body": {
+                        "format": "binary",
+                        "schema": {
+                            "notation": "empty"
+                        }
+                    }
+                }
+            ]
+        },
+        "http DELETE /cats/{id}": {
+            "id": "http DELETE /cats/{id}",
+            "protocol": "http",
+            "httpMethod": "DELETE",
+            "path": "/cats/{id}",
+            "pathVariables": {
+                "schema": {
+                    "content": {
+                        "tokenType": "object",
+                        "type": "object",
+                        "children": [
+                            {
+                                "note": "Cat's id.",
+                                "key": "id",
+                                "tokenType": "string",
+                                "type": "@petId",
+                                "scalarValue": "CAT-123",
+                                "rules": [
+                                    {
+                                        "key": "type",
+                                        "tokenType": "reference",
+                                        "scalarValue": "@petId"
+                                    }
+                                ],
+                                "optional": false
+                            }
+                        ],
+                        "optional": false
+                    },
+                    "notation": "jsight",
+                    "usedUserTypes": [
+                        "@petId"
+                    ]
+                }
+            },
+            "tags": [
+                "@cats"
+            ],
+            "annotation": "Delete a cat."
+        },
+        "http GET /cats/{id}/friends/{friendId}": {
+            "id": "http GET /cats/{id}/friends/{friendId}",
+            "protocol": "http",
+            "httpMethod": "GET",
+            "path": "/cats/{id}/friends/{friendId}",
+            "pathVariables": {
+                "schema": {
+                    "content": {
+                        "tokenType": "object",
+                        "type": "object",
+                        "children": [
+                            {
+                                "note": "Cat's id.",
+                                "key": "id",
+                                "tokenType": "string",
+                                "type": "@petId",
+                                "scalarValue": "CAT-123",
+                                "rules": [
+                                    {
+                                        "key": "type",
+                                        "tokenType": "reference",
+                                        "scalarValue": "@petId"
+                                    }
+                                ],
+                                "optional": false
+                            },
+                            {
+                                "note": "Friend's id.",
+                                "key": "friendId",
+                                "tokenType": "reference",
+                                "type": "@petId",
+                                "scalarValue": "@petId",
+                                "optional": false
+                            }
+                        ],
+                        "optional": false
+                    },
+                    "notation": "jsight",
+                    "usedUserTypes": [
+                        "@petId"
+                    ]
+                }
+            },
+            "tags": [
+                "@cats"
+            ],
+            "annotation": "Get cats friend.",
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "Return the cats friend.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "note": "The cat's friend (cat or pig).",
+                                "tokenType": "reference",
+                                "type": "mixed",
+                                "scalarValue": "@cat | @pig",
+                                "optional": false
+                            },
+                            "example": "{\"status\":\"relaxing\",\"bestFriend\":{\"status\":\"relaxing\",\"topFriends\":{},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"},\"topFriends\":{\"C Yi\":{\"status\":\"relaxing\",\"topFriends\":{},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}},\"topEnemies\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@cat",
+                                "@pig"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "http GET /dogs": {
+            "id": "http GET /dogs",
+            "protocol": "http",
+            "httpMethod": "GET",
+            "path": "/dogs",
+            "tags": [
+                "@dogs"
+            ],
+            "annotation": "Get the paged list of all dogs.",
+            "query": {
+                "example": "page=1&pageSize=30&filter[age]=12",
+                "format": "htmlFormEncoded",
+                "schema": {
+                    "content": {
+                        "rules": [
+                            {
+                                "key": "allOf",
+                                "tokenType": "reference",
+                                "scalarValue": "@pageQuery"
+                            }
+                        ],
+                        "tokenType": "object",
+                        "type": "object",
+                        "children": [
+                            {
+                                "note": "1 by default.",
+                                "key": "page",
+                                "tokenType": "number",
+                                "type": "integer",
+                                "scalarValue": "1",
+                                "inheritedFrom": "@pageQuery",
+                                "rules": [
+                                    {
+                                        "key": "optional",
+                                        "tokenType": "boolean",
+                                        "scalarValue": "true"
+                                    },
+                                    {
+                                        "key": "min",
+                                        "tokenType": "number",
+                                        "scalarValue": "1"
+                                    }
+                                ],
+                                "optional": true
+                            },
+                            {
+                                "note": "30 by default.",
+                                "key": "pageSize",
+                                "tokenType": "number",
+                                "type": "integer",
+                                "scalarValue": "30",
+                                "inheritedFrom": "@pageQuery",
+                                "rules": [
+                                    {
+                                        "key": "optional",
+                                        "tokenType": "boolean",
+                                        "scalarValue": "true"
+                                    },
+                                    {
+                                        "key": "min",
+                                        "tokenType": "number",
+                                        "scalarValue": "10"
+                                    },
+                                    {
+                                        "key": "max",
+                                        "tokenType": "number",
+                                        "scalarValue": "100"
+                                    }
+                                ],
+                                "optional": true
+                            },
+                            {
+                                "rules": [
+                                    {
+                                        "key": "optional",
+                                        "tokenType": "boolean",
+                                        "scalarValue": "true"
+                                    }
+                                ],
+                                "key": "filter",
+                                "tokenType": "object",
+                                "type": "object",
+                                "children": [
+                                    {
+                                        "note": "Filter by dog's size.",
+                                        "key": "size",
+                                        "tokenType": "string",
+                                        "type": "enum",
+                                        "scalarValue": "S",
+                                        "rules": [
+                                            {
+                                                "key": "optional",
+                                                "tokenType": "boolean",
+                                                "scalarValue": "true"
+                                            },
+                                            {
+                                                "key": "enum",
+                                                "tokenType": "array",
+                                                "children": [
+                                                    {
+                                                        "tokenType": "string",
+                                                        "scalarValue": "S"
+                                                    },
+                                                    {
+                                                        "tokenType": "string",
+                                                        "scalarValue": "L"
+                                                    },
+                                                    {
+                                                        "tokenType": "string",
+                                                        "scalarValue": "M"
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "optional": true
+                                    },
+                                    {
+                                        "note": "Filter by dog's age.",
+                                        "key": "age",
+                                        "tokenType": "number",
+                                        "type": "integer",
+                                        "scalarValue": "12",
+                                        "rules": [
+                                            {
+                                                "key": "optional",
+                                                "tokenType": "boolean",
+                                                "scalarValue": "true"
+                                            },
+                                            {
+                                                "key": "min",
+                                                "tokenType": "number",
+                                                "scalarValue": "0"
+                                            }
+                                        ],
+                                        "optional": true
+                                    }
+                                ],
+                                "optional": true
+                            }
+                        ],
+                        "optional": false
+                    },
+                    "example": "{\"filter\":{\"size\":\"S\",\"age\":12},\"page\":1,\"pageSize\":30}",
+                    "notation": "jsight",
+                    "usedUserTypes": [
+                        "@pageQuery"
+                    ]
+                }
+            },
+            "request": {
+                "headers": {
+                    "schema": {
+                        "content": {
+                            "tokenType": "reference",
+                            "type": "@commonRequestHeaders",
+                            "scalarValue": "@commonRequestHeaders",
+                            "optional": false
+                        },
+                        "example": "{\"Content-Type\":\"application/json\",\"Authorization\":\"Basic dG9tQGNhdC5jb206YWJjMTIz=\"}",
+                        "notation": "jsight",
+                        "usedUserTypes": [
+                            "@commonRequestHeaders"
+                        ]
+                    }
+                },
+                "body": {
+                    "format": "binary",
+                    "schema": {
+                        "notation": "empty"
+                    }
+                }
+            },
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "Returns a page of dogs.",
+                    "headers": {
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@commonResponseHeaders",
+                                "scalarValue": "@commonResponseHeaders",
+                                "optional": false
+                            },
+                            "example": "{\"Content-Type\":\"application/json\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@commonResponseHeaders"
+                            ]
+                        }
+                    },
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "object",
+                                "type": "object",
+                                "children": [
+                                    {
+                                        "key": "items",
+                                        "tokenType": "array",
+                                        "type": "array",
+                                        "children": [
+                                            {
+                                                "tokenType": "reference",
+                                                "type": "@dog",
+                                                "scalarValue": "@dog",
+                                                "optional": true
+                                            }
+                                        ],
+                                        "optional": false
+                                    },
+                                    {
+                                        "key": "page",
+                                        "tokenType": "number",
+                                        "type": "integer",
+                                        "scalarValue": "1",
+                                        "optional": false
+                                    },
+                                    {
+                                        "key": "pageSize",
+                                        "tokenType": "number",
+                                        "type": "integer",
+                                        "scalarValue": "30",
+                                        "optional": false
+                                    }
+                                ],
+                                "optional": false
+                            },
+                            "example": "{\"items\":[{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}],\"page\":1,\"pageSize\":30}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@dog"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "code": "401",
+                    "annotation": "Unauthorised.",
+                    "body": {
+                        "format": "binary",
+                        "schema": {
+                            "notation": "any"
+                        }
+                    }
+                },
+                {
+                    "code": "404",
+                    "annotation": "Not found.",
+                    "body": {
+                        "format": "binary",
+                        "schema": {
+                            "notation": "empty"
+                        }
+                    }
+                },
+                {
+                    "code": "409",
+                    "annotation": "Some error.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@error",
+                                "scalarValue": "@error",
+                                "optional": false
+                            },
+                            "example": "{\"code\":12,\"message\":\"Something bad had happened on server...\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@error"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "http POST /dogs": {
+            "id": "http POST /dogs",
+            "protocol": "http",
+            "httpMethod": "POST",
+            "path": "/dogs",
+            "tags": [
+                "@dogs"
+            ],
+            "annotation": "Create a new dog.",
+            "description": "### Limitations\n\n- Accounts are limited to 25 new dogs \n  within a 24 hour period.",
+            "request": {
+                "headers": {
+                    "schema": {
+                        "content": {
+                            "rules": [
+                                {
+                                    "key": "allOf",
+                                    "tokenType": "reference",
+                                    "scalarValue": "@commonRequestHeaders"
+                                }
+                            ],
+                            "tokenType": "object",
+                            "type": "object",
+                            "children": [
+                                {
+                                    "key": "Content-Type",
+                                    "tokenType": "string",
+                                    "type": "string",
+                                    "scalarValue": "application/json",
+                                    "inheritedFrom": "@commonRequestHeaders",
+                                    "rules": [
+                                        {
+                                            "key": "const",
+                                            "tokenType": "boolean",
+                                            "scalarValue": "true"
+                                        }
+                                    ],
+                                    "optional": false
+                                },
+                                {
+                                    "key": "Authorization",
+                                    "tokenType": "string",
+                                    "type": "string",
+                                    "scalarValue": "Basic dG9tQGNhdC5jb206YWJjMTIz=",
+                                    "inheritedFrom": "@commonRequestHeaders",
+                                    "rules": [
+                                        {
+                                            "key": "regex",
+                                            "tokenType": "string",
+                                            "scalarValue": "^Basic [A-Za-z0-9+\/=]+$"
+                                        }
+                                    ],
+                                    "optional": false
+                                },
+                                {
+                                    "key": "X-header",
+                                    "tokenType": "string",
+                                    "type": "string",
+                                    "scalarValue": "Some additional header",
+                                    "optional": false
+                                }
+                            ],
+                            "optional": false
+                        },
+                        "example": "{\"X-header\":\"Some additional header\",\"Content-Type\":\"application/json\",\"Authorization\":\"Basic dG9tQGNhdC5jb206YWJjMTIz=\"}",
+                        "notation": "jsight",
+                        "usedUserTypes": [
+                            "@commonRequestHeaders"
+                        ]
+                    }
+                },
+                "body": {
+                    "format": "json",
+                    "schema": {
+                        "content": {
+                            "tokenType": "reference",
+                            "type": "@dog",
+                            "scalarValue": "@dog",
+                            "optional": false
+                        },
+                        "example": "{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}",
+                        "notation": "jsight",
+                        "usedUserTypes": [
+                            "@dog"
+                        ]
+                    }
+                }
+            },
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "Success.",
+                    "headers": {
+                        "schema": {
+                            "content": {
+                                "tokenType": "object",
+                                "type": "object",
+                                "children": [
+                                    {
+                                        "key": "X-header",
+                                        "tokenType": "string",
+                                        "type": "string",
+                                        "scalarValue": "Some additional header",
+                                        "optional": false
+                                    }
+                                ],
+                                "optional": false
+                            },
+                            "example": "{\"X-header\":\"Some additional header\"}",
+                            "notation": "jsight"
+                        }
+                    },
+                    "body": {
+                        "format": "plainString",
+                        "schema": {
+                            "content": "^OK$",
+                            "example": "OK",
+                            "notation": "regex"
+                        }
+                    }
+                },
+                {
+                    "code": "401",
+                    "annotation": "Unauthorised.",
+                    "body": {
+                        "format": "binary",
+                        "schema": {
+                            "notation": "any"
+                        }
+                    }
+                },
+                {
+                    "code": "404",
+                    "annotation": "Not found.",
+                    "body": {
+                        "format": "binary",
+                        "schema": {
+                            "notation": "empty"
+                        }
+                    }
+                },
+                {
+                    "code": "409",
+                    "annotation": "Some error.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@error",
+                                "scalarValue": "@error",
+                                "optional": false
+                            },
+                            "example": "{\"code\":12,\"message\":\"Something bad had happened on server...\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@error"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "http GET /dogs/{id}": {
+            "id": "http GET /dogs/{id}",
+            "protocol": "http",
+            "httpMethod": "GET",
+            "path": "/dogs/{id}",
+            "pathVariables": {
+                "schema": {
+                    "content": {
+                        "tokenType": "object",
+                        "type": "object",
+                        "children": [
+                            {
+                                "note": "Dog's id.",
+                                "key": "id",
+                                "tokenType": "string",
+                                "type": "@petId",
+                                "scalarValue": "DOG-123",
+                                "rules": [
+                                    {
+                                        "key": "type",
+                                        "tokenType": "reference",
+                                        "scalarValue": "@petId"
+                                    }
+                                ],
+                                "optional": false
+                            }
+                        ],
+                        "optional": false
+                    },
+                    "notation": "jsight",
+                    "usedUserTypes": [
+                        "@petId"
+                    ]
+                }
+            },
+            "tags": [
+                "@dogs"
+            ],
+            "annotation": "Get a dog by its id.",
+            "request": {
+                "headers": {
+                    "schema": {
+                        "content": {
+                            "tokenType": "reference",
+                            "type": "@commonRequestHeaders",
+                            "scalarValue": "@commonRequestHeaders",
+                            "optional": false
+                        },
+                        "example": "{\"Content-Type\":\"application/json\",\"Authorization\":\"Basic dG9tQGNhdC5jb206YWJjMTIz=\"}",
+                        "notation": "jsight",
+                        "usedUserTypes": [
+                            "@commonRequestHeaders"
+                        ]
+                    }
+                },
+                "body": {
+                    "format": "binary",
+                    "schema": {
+                        "notation": "empty"
+                    }
+                }
+            },
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "Return a dog.",
+                    "headers": {
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@commonResponseHeaders",
+                                "scalarValue": "@commonResponseHeaders",
+                                "optional": false
+                            },
+                            "example": "{\"Content-Type\":\"application/json\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@commonResponseHeaders"
+                            ]
+                        }
+                    },
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@dog",
+                                "scalarValue": "@dog",
+                                "optional": false
+                            },
+                            "example": "{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@dog"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "code": "401",
+                    "annotation": "Unauthorised.",
+                    "body": {
+                        "format": "binary",
+                        "schema": {
+                            "notation": "any"
+                        }
+                    }
+                },
+                {
+                    "code": "404",
+                    "annotation": "Not found.",
+                    "body": {
+                        "format": "binary",
+                        "schema": {
+                            "notation": "empty"
+                        }
+                    }
+                },
+                {
+                    "code": "409",
+                    "annotation": "Some error.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@error",
+                                "scalarValue": "@error",
+                                "optional": false
+                            },
+                            "example": "{\"code\":12,\"message\":\"Something bad had happened on server...\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@error"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "http PUT /dogs/{id}": {
+            "id": "http PUT /dogs/{id}",
+            "protocol": "http",
+            "httpMethod": "PUT",
+            "path": "/dogs/{id}",
+            "pathVariables": {
+                "schema": {
+                    "content": {
+                        "tokenType": "object",
+                        "type": "object",
+                        "children": [
+                            {
+                                "note": "Dog's id.",
+                                "key": "id",
+                                "tokenType": "string",
+                                "type": "@petId",
+                                "scalarValue": "DOG-123",
+                                "rules": [
+                                    {
+                                        "key": "type",
+                                        "tokenType": "reference",
+                                        "scalarValue": "@petId"
+                                    }
+                                ],
+                                "optional": false
+                            }
+                        ],
+                        "optional": false
+                    },
+                    "notation": "jsight",
+                    "usedUserTypes": [
+                        "@petId"
+                    ]
+                }
+            },
+            "tags": [
+                "@dogs"
+            ],
+            "annotation": "Update a dog.",
+            "request": {
+                "headers": {
+                    "schema": {
+                        "content": {
+                            "tokenType": "reference",
+                            "type": "@commonRequestHeaders",
+                            "scalarValue": "@commonRequestHeaders",
+                            "optional": false
+                        },
+                        "example": "{\"Content-Type\":\"application/json\",\"Authorization\":\"Basic dG9tQGNhdC5jb206YWJjMTIz=\"}",
+                        "notation": "jsight",
+                        "usedUserTypes": [
+                            "@commonRequestHeaders"
+                        ]
+                    }
+                },
+                "body": {
+                    "format": "json",
+                    "schema": {
+                        "content": {
+                            "tokenType": "reference",
+                            "type": "@dog",
+                            "scalarValue": "@dog",
+                            "optional": false
+                        },
+                        "example": "{\"friendIds\":[\"GOAT-12345\"],\"isDangerous\":false,\"legacyId\":1,\"additionalData\":{},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}",
+                        "notation": "jsight",
+                        "usedUserTypes": [
+                            "@dog"
+                        ]
+                    }
+                }
+            },
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "Success.",
+                    "headers": {
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@commonResponseHeaders",
+                                "scalarValue": "@commonResponseHeaders",
+                                "optional": false
+                            },
+                            "example": "{\"Content-Type\":\"application/json\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@commonResponseHeaders"
+                            ]
+                        }
+                    },
+                    "body": {
+                        "format": "binary",
+                        "schema": {
+                            "notation": "any"
+                        }
+                    }
+                },
+                {
+                    "code": "401",
+                    "annotation": "Unauthorised.",
+                    "body": {
+                        "format": "binary",
+                        "schema": {
+                            "notation": "any"
+                        }
+                    }
+                },
+                {
+                    "code": "404",
+                    "annotation": "Not found.",
+                    "body": {
+                        "format": "binary",
+                        "schema": {
+                            "notation": "empty"
+                        }
+                    }
+                },
+                {
+                    "code": "409",
+                    "annotation": "Some error.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@error",
+                                "scalarValue": "@error",
+                                "optional": false
+                            },
+                            "example": "{\"code\":12,\"message\":\"Something bad had happened on server...\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@error"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "http DELETE /dogs/{id}": {
+            "id": "http DELETE /dogs/{id}",
+            "protocol": "http",
+            "httpMethod": "DELETE",
+            "path": "/dogs/{id}",
+            "pathVariables": {
+                "schema": {
+                    "content": {
+                        "tokenType": "object",
+                        "type": "object",
+                        "children": [
+                            {
+                                "note": "Dog's id.",
+                                "key": "id",
+                                "tokenType": "string",
+                                "type": "@petId",
+                                "scalarValue": "DOG-123",
+                                "rules": [
+                                    {
+                                        "key": "type",
+                                        "tokenType": "reference",
+                                        "scalarValue": "@petId"
+                                    }
+                                ],
+                                "optional": false
+                            }
+                        ],
+                        "optional": false
+                    },
+                    "notation": "jsight",
+                    "usedUserTypes": [
+                        "@petId"
+                    ]
+                }
+            },
+            "tags": [
+                "@dogs"
+            ],
+            "annotation": "Delete a dog.",
+            "request": {
+                "headers": {
+                    "schema": {
+                        "content": {
+                            "tokenType": "reference",
+                            "type": "@commonRequestHeaders",
+                            "scalarValue": "@commonRequestHeaders",
+                            "optional": false
+                        },
+                        "example": "{\"Content-Type\":\"application/json\",\"Authorization\":\"Basic dG9tQGNhdC5jb206YWJjMTIz=\"}",
+                        "notation": "jsight",
+                        "usedUserTypes": [
+                            "@commonRequestHeaders"
+                        ]
+                    }
+                },
+                "body": {
+                    "format": "binary",
+                    "schema": {
+                        "notation": "empty"
+                    }
+                }
+            },
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "OK.",
+                    "headers": {
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@commonResponseHeaders",
+                                "scalarValue": "@commonResponseHeaders",
+                                "optional": false
+                            },
+                            "example": "{\"Content-Type\":\"application/json\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@commonResponseHeaders"
+                            ]
+                        }
+                    },
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "string",
+                                "type": "string",
+                                "scalarValue": "OK",
+                                "rules": [
+                                    {
+                                        "key": "const",
+                                        "tokenType": "boolean",
+                                        "scalarValue": "true"
+                                    }
+                                ],
+                                "optional": false
+                            },
+                            "example": "\"OK\"",
+                            "notation": "jsight"
+                        }
+                    }
+                },
+                {
+                    "code": "401",
+                    "annotation": "Unauthorised.",
+                    "body": {
+                        "format": "binary",
+                        "schema": {
+                            "notation": "any"
+                        }
+                    }
+                },
+                {
+                    "code": "404",
+                    "annotation": "Not found.",
+                    "body": {
+                        "format": "binary",
+                        "schema": {
+                            "notation": "empty"
+                        }
+                    }
+                },
+                {
+                    "code": "409",
+                    "annotation": "Some error.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@error",
+                                "scalarValue": "@error",
+                                "optional": false
+                            },
+                            "example": "{\"code\":12,\"message\":\"Something bad had happened on server...\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@error"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "http GET /pigs": {
+            "id": "http GET /pigs",
+            "protocol": "http",
+            "httpMethod": "GET",
+            "path": "/pigs",
+            "tags": [
+                "@pigs"
+            ],
+            "annotation": "Get the list of all pigs.",
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "List of pigs.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "array",
+                                "type": "array",
+                                "children": [
+                                    {
+                                        "tokenType": "reference",
+                                        "type": "@pig",
+                                        "scalarValue": "@pig",
+                                        "optional": true
+                                    }
+                                ],
+                                "optional": false
+                            },
+                            "example": "[{\"temperature\":35.6,\"pigSize\":\"S\",\"lastWashTime\":\"2021-01-02T15:04:05+03:00\",\"additionalData\":{\"key\":\"value\"},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}]",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@pig"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "http POST /pigs": {
+            "id": "http POST /pigs",
+            "protocol": "http",
+            "httpMethod": "POST",
+            "path": "/pigs",
+            "tags": [
+                "@pigs"
+            ],
+            "annotation": "Create a new pig.",
+            "request": {
+                "body": {
+                    "format": "json",
+                    "schema": {
+                        "content": {
+                            "tokenType": "reference",
+                            "type": "@pig",
+                            "scalarValue": "@pig",
+                            "optional": false
+                        },
+                        "example": "{\"temperature\":35.6,\"pigSize\":\"S\",\"lastWashTime\":\"2021-01-02T15:04:05+03:00\",\"additionalData\":{\"key\":\"value\"},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}",
+                        "notation": "jsight",
+                        "usedUserTypes": [
+                            "@pig"
+                        ]
+                    }
+                }
+            },
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "Created pig.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@pig",
+                                "scalarValue": "@pig",
+                                "optional": false
+                            },
+                            "example": "{\"temperature\":35.6,\"pigSize\":\"S\",\"lastWashTime\":\"2021-01-02T15:04:05+03:00\",\"additionalData\":{\"key\":\"value\"},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@pig"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "code": "409",
+                    "annotation": "Pig is not created.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@error",
+                                "scalarValue": "@error",
+                                "optional": false
+                            },
+                            "example": "{\"code\":12,\"message\":\"Something bad had happened on server...\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@error"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "http GET /pigs/{id}": {
+            "id": "http GET /pigs/{id}",
+            "protocol": "http",
+            "httpMethod": "GET",
+            "path": "/pigs/{id}",
+            "pathVariables": {
+                "schema": {
+                    "content": {
+                        "tokenType": "object",
+                        "type": "object",
+                        "children": [
+                            {
+                                "note": "A pigs id.",
+                                "key": "id",
+                                "tokenType": "string",
+                                "type": "@petId",
+                                "scalarValue": "PIG-123",
+                                "rules": [
+                                    {
+                                        "key": "type",
+                                        "tokenType": "reference",
+                                        "scalarValue": "@petId"
+                                    }
+                                ],
+                                "optional": false
+                            }
+                        ],
+                        "optional": false
+                    },
+                    "notation": "jsight",
+                    "usedUserTypes": [
+                        "@petId"
+                    ]
+                }
+            },
+            "tags": [
+                "@pigs"
+            ],
+            "annotation": "Get a pig by its id.",
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "A pig.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@pig",
+                                "scalarValue": "@pig",
+                                "optional": false
+                            },
+                            "example": "{\"temperature\":35.6,\"pigSize\":\"S\",\"lastWashTime\":\"2021-01-02T15:04:05+03:00\",\"additionalData\":{\"key\":\"value\"},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@pig"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "code": "404",
+                    "annotation": "Pig not found.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@error",
+                                "scalarValue": "@error",
+                                "optional": false
+                            },
+                            "example": "{\"code\":12,\"message\":\"Something bad had happened on server...\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@error"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "http PUT /pigs/{id}": {
+            "id": "http PUT /pigs/{id}",
+            "protocol": "http",
+            "httpMethod": "PUT",
+            "path": "/pigs/{id}",
+            "pathVariables": {
+                "schema": {
+                    "content": {
+                        "tokenType": "object",
+                        "type": "object",
+                        "children": [
+                            {
+                                "note": "A pigs id.",
+                                "key": "id",
+                                "tokenType": "string",
+                                "type": "@petId",
+                                "scalarValue": "PIG-123",
+                                "rules": [
+                                    {
+                                        "key": "type",
+                                        "tokenType": "reference",
+                                        "scalarValue": "@petId"
+                                    }
+                                ],
+                                "optional": false
+                            }
+                        ],
+                        "optional": false
+                    },
+                    "notation": "jsight",
+                    "usedUserTypes": [
+                        "@petId"
+                    ]
+                }
+            },
+            "tags": [
+                "@pigs"
+            ],
+            "annotation": "Change a pig by its id.",
+            "request": {
+                "body": {
+                    "format": "json",
+                    "schema": {
+                        "content": {
+                            "tokenType": "reference",
+                            "type": "@pig",
+                            "scalarValue": "@pig",
+                            "optional": false
+                        },
+                        "example": "{\"temperature\":35.6,\"pigSize\":\"S\",\"lastWashTime\":\"2021-01-02T15:04:05+03:00\",\"additionalData\":{\"key\":\"value\"},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}",
+                        "notation": "jsight",
+                        "usedUserTypes": [
+                            "@pig"
+                        ]
+                    }
+                }
+            },
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "An updated pig.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@pig",
+                                "scalarValue": "@pig",
+                                "optional": false
+                            },
+                            "example": "{\"temperature\":35.6,\"pigSize\":\"S\",\"lastWashTime\":\"2021-01-02T15:04:05+03:00\",\"additionalData\":{\"key\":\"value\"},\"id\":\"GOAT-12345\",\"name\":\"Tom\",\"type\":\"PIG\",\"age\":10,\"email\":\"tom@pets.com\",\"uri\":\"http://tom.pets.com\",\"birthday\":\"2012-01-03\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@pig"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "code": "404",
+                    "annotation": "Pig not found.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@error",
+                                "scalarValue": "@error",
+                                "optional": false
+                            },
+                            "example": "{\"code\":12,\"message\":\"Something bad had happened on server...\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@error"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "code": "409",
+                    "annotation": "Error.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@error",
+                                "scalarValue": "@error",
+                                "optional": false
+                            },
+                            "example": "{\"code\":12,\"message\":\"Something bad had happened on server...\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@error"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "http DELETE /pigs/{id}": {
+            "id": "http DELETE /pigs/{id}",
+            "protocol": "http",
+            "httpMethod": "DELETE",
+            "path": "/pigs/{id}",
+            "pathVariables": {
+                "schema": {
+                    "content": {
+                        "tokenType": "object",
+                        "type": "object",
+                        "children": [
+                            {
+                                "note": "A pigs id.",
+                                "key": "id",
+                                "tokenType": "string",
+                                "type": "@petId",
+                                "scalarValue": "PIG-123",
+                                "rules": [
+                                    {
+                                        "key": "type",
+                                        "tokenType": "reference",
+                                        "scalarValue": "@petId"
+                                    }
+                                ],
+                                "optional": false
+                            }
+                        ],
+                        "optional": false
+                    },
+                    "notation": "jsight",
+                    "usedUserTypes": [
+                        "@petId"
+                    ]
+                }
+            },
+            "tags": [
+                "@pigs"
+            ],
+            "annotation": "Delete a pig by its id.",
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "Success.",
+                    "body": {
+                        "format": "binary",
+                        "schema": {
+                            "notation": "empty"
+                        }
+                    }
+                },
+                {
+                    "code": "404",
+                    "annotation": "Pig not found.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@error",
+                                "scalarValue": "@error",
+                                "optional": false
+                            },
+                            "example": "{\"code\":12,\"message\":\"Something bad had happened on server...\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@error"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "code": "409",
+                    "annotation": "Error.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@error",
+                                "scalarValue": "@error",
+                                "optional": false
+                            },
+                            "example": "{\"code\":12,\"message\":\"Something bad had happened on server...\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@error"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "jsight": "0.3",
+    "jdocExchangeVersion": "2.0.0"
+}

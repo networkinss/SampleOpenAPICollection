@@ -1,0 +1,269 @@
+{
+    "tags": {
+        "@cats": {
+            "name": "@cats",
+            "title": "/cats",
+            "interactionGroups": [
+                {
+                    "protocol": "http",
+                    "interactions": [
+                        "http GET /cats",
+                        "http POST /cats",
+                        "http GET /cats/{id}",
+                        "http PUT /cats/{id}",
+                        "http DELETE /cats/{id}"
+                    ]
+                }
+            ]
+        }
+    },
+    "userTypes": {
+        "@cat": {
+            "annotation": "A cat.",
+            "schema": {
+                "content": {
+                    "tokenType": "object",
+                    "type": "object",
+                    "children": [
+                        {
+                            "key": "id",
+                            "tokenType": "number",
+                            "type": "integer",
+                            "scalarValue": "1",
+                            "optional": false
+                        },
+                        {
+                            "key": "name",
+                            "tokenType": "string",
+                            "type": "string",
+                            "scalarValue": "Tom",
+                            "optional": false
+                        },
+                        {
+                            "key": "color",
+                            "tokenType": "string",
+                            "type": "enum",
+                            "scalarValue": "black",
+                            "rules": [
+                                {
+                                    "key": "enum",
+                                    "tokenType": "array",
+                                    "children": [
+                                        {
+                                            "tokenType": "string",
+                                            "scalarValue": "black"
+                                        },
+                                        {
+                                            "tokenType": "string",
+                                            "scalarValue": "white"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "optional": false
+                        }
+                    ],
+                    "optional": false
+                },
+                "example": "{\"id\":1,\"name\":\"Tom\",\"color\":\"black\"}",
+                "notation": "jsight"
+            }
+        }
+    },
+    "interactions": {
+        "http GET /cats": {
+            "id": "http GET /cats",
+            "protocol": "http",
+            "httpMethod": "GET",
+            "path": "/cats",
+            "tags": [
+                "@cats"
+            ],
+            "annotation": "Get all cats.",
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "Returns all cats.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "array",
+                                "type": "array",
+                                "children": [
+                                    {
+                                        "tokenType": "reference",
+                                        "type": "@cat",
+                                        "scalarValue": "@cat",
+                                        "optional": true
+                                    }
+                                ],
+                                "optional": false
+                            },
+                            "example": "[{\"id\":1,\"name\":\"Tom\",\"color\":\"black\"}]",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@cat"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "http POST /cats": {
+            "id": "http POST /cats",
+            "protocol": "http",
+            "httpMethod": "POST",
+            "path": "/cats",
+            "tags": [
+                "@cats"
+            ],
+            "annotation": "Create a cat.",
+            "request": {
+                "body": {
+                    "format": "json",
+                    "schema": {
+                        "content": {
+                            "tokenType": "reference",
+                            "type": "@cat",
+                            "scalarValue": "@cat",
+                            "optional": false
+                        },
+                        "example": "{\"id\":1,\"name\":\"Tom\",\"color\":\"black\"}",
+                        "notation": "jsight",
+                        "usedUserTypes": [
+                            "@cat"
+                        ]
+                    }
+                }
+            },
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "Success.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@cat",
+                                "scalarValue": "@cat",
+                                "optional": false
+                            },
+                            "example": "{\"id\":1,\"name\":\"Tom\",\"color\":\"black\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@cat"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "http GET /cats/{id}": {
+            "id": "http GET /cats/{id}",
+            "protocol": "http",
+            "httpMethod": "GET",
+            "path": "/cats/{id}",
+            "tags": [
+                "@cats"
+            ],
+            "annotation": "Get a cat by its id.",
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "Returns a cat.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@cat",
+                                "scalarValue": "@cat",
+                                "optional": false
+                            },
+                            "example": "{\"id\":1,\"name\":\"Tom\",\"color\":\"black\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@cat"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "http PUT /cats/{id}": {
+            "id": "http PUT /cats/{id}",
+            "protocol": "http",
+            "httpMethod": "PUT",
+            "path": "/cats/{id}",
+            "tags": [
+                "@cats"
+            ],
+            "annotation": "Update a cat.",
+            "request": {
+                "body": {
+                    "format": "json",
+                    "schema": {
+                        "content": {
+                            "tokenType": "reference",
+                            "type": "@cat",
+                            "scalarValue": "@cat",
+                            "optional": false
+                        },
+                        "example": "{\"id\":1,\"name\":\"Tom\",\"color\":\"black\"}",
+                        "notation": "jsight",
+                        "usedUserTypes": [
+                            "@cat"
+                        ]
+                    }
+                }
+            },
+            "responses": [
+                {
+                    "code": "200",
+                    "annotation": "Returns an updated cat.",
+                    "body": {
+                        "format": "json",
+                        "schema": {
+                            "content": {
+                                "tokenType": "reference",
+                                "type": "@cat",
+                                "scalarValue": "@cat",
+                                "optional": false
+                            },
+                            "example": "{\"id\":1,\"name\":\"Tom\",\"color\":\"black\"}",
+                            "notation": "jsight",
+                            "usedUserTypes": [
+                                "@cat"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "http DELETE /cats/{id}": {
+            "id": "http DELETE /cats/{id}",
+            "protocol": "http",
+            "httpMethod": "DELETE",
+            "path": "/cats/{id}",
+            "tags": [
+                "@cats"
+            ],
+            "annotation": "Delete a cat.",
+            "responses": [
+                {
+                    "code": "200",
+                    "body": {
+                        "format": "binary",
+                        "schema": {
+                            "notation": "any"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "jsight": "0.3",
+    "jdocExchangeVersion": "2.0.0"
+}
